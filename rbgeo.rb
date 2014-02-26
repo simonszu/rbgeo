@@ -1,11 +1,14 @@
 #! /usr/bin/env ruby
+# coding: utf-8
 
 require 'mechanize'
 require 'nokogiri'
 require 'yaml'
 require 'open-uri'
+require 'sqlite3'
 
 CONFIG_FILE = 'config.yaml'
+CACHEDB = 'caches.db'
 
 LOGIN_PAGE = 'https://www.geocaching.com/login/'
 MY_PAGE = 'http://www.geocaching.com/my/logs.aspx'
@@ -21,6 +24,21 @@ gc_passwd = config['credentials']['password']
 # Create a new agent
 a = Mechanize.new {|agent|
   agent.user_agent_alias = 'Mac Safari'}
+
+# Create or open the database
+begin
+  if File.file?(CACHEDB)
+    db = SQLite3::Database.open CACHEDB
+  else
+    db = SQLite3::Database.new CACHEDB
+    db.execute "CREATE TABLE IF NOT EXISTS Caches(Id INTEGER PRIMARY KEY, Name TEXT, Logtype TEXT, Logdate INT, Cachetype TEXT, Area TEXT, Favorite INTEGER, Log TEXT)"
+  end
+rescue SQLite3::Exception => e
+  puts "Fehler beim Zugriff oder Anlegen der Datenbank."
+  puts e
+  puts "In den meisten Fällen reicht es, das Datenbankfile #{CACHEDB} zu löschen, und alle Caches erneut einzulesen."
+  exit
+end
 
 puts "This is rbgeo version 0.1."
 puts "Logging in..."
