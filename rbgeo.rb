@@ -7,14 +7,7 @@ require 'yaml'
 require 'open-uri'
 require 'sqlite3'
 
-CONFIG_FILE = 'config.yaml'
-CACHEDB = 'caches.db'
-
-LOGIN_PAGE = 'https://www.geocaching.com/login/'
-MY_PAGE = 'http://www.geocaching.com/my/logs.aspx'
-
-LOGTYPES = ["Found it", "Didn't find it", "Will attend", "Owner Maintenance", "Needs Maintenance", "Needs Archived", "Archive", "Enable Listing", "Temporarily Disable Listing", "Post Reviewer Note", "Webcam Photo Taken", "Write note", "Attended"]
-CACHETYPES = ["Multi-cache", "Traditional Cache", "Event Cache", "Unknown Cache", "Webcam Cache", "Lost and Found Event Cache", "Earthcache"]
+require_relative 'constants.rb'
 
 puts "This is rbgeo version 0.1."
 
@@ -33,7 +26,7 @@ begin
     db = SQLite3::Database.open CACHEDB
   else
     db = SQLite3::Database.new CACHEDB
-    db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, name TEXT, logtype TEXT, logdate INTEGER, cachetype TEXT, area TEXT, favorite INTEGER, log TEXT)"
+    db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, name TEXT, status TEXT, logtype TEXT, logdate INTEGER, cachetype TEXT, area TEXT, favorite INTEGER, log TEXT)"
   end
 rescue SQLite3::Exception => e
   puts "Fehler beim Zugriff oder Anlegen der Datenbank."
@@ -57,8 +50,14 @@ puts "Loading your caches..."
 # List my founds
 a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
   favorite = 0
+  status = "Available"
   name = cachetable.css("a")[1].inner_text.strip
   logtype = cachetable.css("img")[0]["title"].strip
+  if cachetable.css("a > span[class = '#{DISABLED_SPANCLASS}']").length > 0
+    status = "Disabled"
+  elsif cachetable.css("a > span[class = '#{ARCHIVED_SPANCLASS}']").length > 0
+    status = "Archived"
+  end
   cachetable.css("td")[2].inner_text.strip.match(/(\d{2})\/(\d{2})\/(\d{4})/)
   logdate = Time.new($3, $1, $2).to_i
   if cachetable.css("img").length == 3
@@ -69,8 +68,10 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
   end
   nbsp = Nokogiri::HTML("&nbsp;").text
   area = cachetable.css("td")[4].inner_text.gsub(nbsp, "").strip
-  log_page = cachetable.css("a")[2]["href"]
-  db.execute("INSERT INTO caches (name, logtype, logdate, cachetype, area, favorite, log) VALUES (?, ?, ?, ?, ?, ?, ?)", [name, logtype, logdate, cachetype, area, favorite, log_page])
+  puts "Loading Log for #{name}..." 
+  log = a.get(cachetable.css("a")[2]["href"]).search("span[id = '#{LOG_SPANID}']")[0].inner_text.strip
+  db.execute("INSERT INTO caches (name, status, logtype, logdate, cachetype, area, favorite, log) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [name, status, logtype, logdate, cachetype, area, favorite, log])
+  sleep (1..5).to_a.sample
 end
 
 db.close
