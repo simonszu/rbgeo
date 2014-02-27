@@ -1,6 +1,8 @@
 #! /usr/bin/env ruby
 # coding: utf-8
 
+$stdout.sync = true
+
 require 'mechanize'
 require 'nokogiri'
 require 'yaml'
@@ -26,7 +28,7 @@ begin
     db = SQLite3::Database.open CACHEDB
   else
     db = SQLite3::Database.new CACHEDB
-    db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, name TEXT, status TEXT, logtype TEXT, logdate INTEGER, cachetype TEXT, area TEXT, favorite INTEGER, log TEXT)"
+    db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, gcid TEXT, name TEXT, status TEXT, owner TEXT, difficulty REAL, terrain REAL, size TEXT, coords TEXT, favcount INTEGER, logtype TEXT, logdate INTEGER, cachetype TEXT, area TEXT, favorite INTEGER, log TEXT)"
   end
 rescue SQLite3::Exception => e
   puts "Fehler beim Zugriff oder Anlegen der Datenbank."
@@ -49,13 +51,15 @@ puts "Loading your caches..."
 
 # List my founds
 a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
+
+  # Get basic details
   favorite = 0
   status = "Available"
   name = cachetable.css("a")[1].inner_text.strip
   logtype = cachetable.css("img")[0]["title"].strip
-  if cachetable.css("a > span[class = '#{DISABLED_SPANCLASS}']").length > 0
+  if cachetable.css("a > span[class = 'Strike']").length > 0
     status = "Disabled"
-  elsif cachetable.css("a > span[class = '#{ARCHIVED_SPANCLASS}']").length > 0
+  elsif cachetable.css("a > span[class = 'Strike OldWarning']").length > 0
     status = "Archived"
   end
   cachetable.css("td")[2].inner_text.strip.match(/(\d{2})\/(\d{2})\/(\d{4})/)
@@ -68,10 +72,46 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
   end
   nbsp = Nokogiri::HTML("&nbsp;").text
   area = cachetable.css("td")[4].inner_text.gsub(nbsp, "").strip
-  puts "Loading Log for #{name}..." 
-  log = a.get(cachetable.css("a")[2]["href"]).search("span[id = '#{LOG_SPANID}']")[0].inner_text.strip
-  db.execute("INSERT INTO caches (name, status, logtype, logdate, cachetype, area, favorite, log) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [name, status, logtype, logdate, cachetype, area, favorite, log])
+
+  # Get detailed details
+  print "Loading details for #{name}..."
+  begin
+    detailpage = a.get(cachetable.css("a")[1]["href"])
+    owner = detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0].inner_text
+    detailpage.search("span[id = 'ctl00_ContentBody_uxLegendScale'] img")[0]["alt"].match(/(.{1,3}) out of 5/)
+    difficulty = $1.to_f
+    detailpage.search("span[id = 'ctl00_ContentBody_Localize12'] img")[0]["alt"].match(/(.{1,3}) out of 5/)
+    terrain = $1.to_f
+    detailpage.search("span.minorCacheDetails img")[0]["alt"].match(/Size: (.+)/)
+    size = $1
+    coords = detailpage.search("span[id = 'uxLatLon']")[0].inner_text
+    if detailpage.search("span.favorite-value").length > 0
+      favcount = detailpage.search("span.favorite-value")[0].inner_text
+    else
+      favcount = 0
+    end
+    gcid = detailpage.search("span[id='ctl00_ContentBody_CoordInfoLinkControl1_uxCoordInfoCode']")[0].inner_text
+  rescue
+    owner = "N.N"
+    difficulty = 0
+    terrain = 0
+    size = "-"
+    coords = "-"
+    favcount = 0
+    gcid = "NOT_PUBLISHED"
+  end
+  print "OK\n"
   sleep (1..5).to_a.sample
+
+  
+  # Get the log
+  print "Loading log for #{name}..." 
+  log = a.get(cachetable.css("a")[2]["href"]).search("span[id = 'ctl00_ContentBody_LogBookPanel1_LogText']")[0].inner_text.strip
+  print "OK\n"
+  sleep (1..5).to_a.sample
+
+  # Insert into DB
+  db.execute("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, coords, favcount, logtype, logdate, cachetype, area, favorite, log) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gcid, name, status, owner, difficulty, terrain, size, coords, favcount, logtype, logdate, cachetype, area, favorite, log]) 
 end
 
 db.close
