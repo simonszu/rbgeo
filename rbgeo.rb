@@ -28,7 +28,7 @@ begin
     db = SQLite3::Database.open CACHEDB
   else
     db = SQLite3::Database.new CACHEDB
-    db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, gcid TEXT, name TEXT, status TEXT, owner TEXT, difficulty REAL, terrain REAL, size TEXT, coords TEXT, favcount INTEGER, logtype TEXT, logdate INTEGER, cachetype TEXT, area TEXT, favorite INTEGER, log TEXT)"
+    db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, gcid TEXT, name TEXT, owner TEXT, cachetype TEXT, size TEXT, difficulty REAL, terrain REAL, coords TEXT, area TEXT, hiddendate INTEGER, status TEXT, favcount INTEGER, logtype TEXT, logdate INTEGER, favorite INTEGER, log TEXT)"
   end
 rescue SQLite3::Exception => e
   puts "Fehler beim Zugriff oder Anlegen der Datenbank."
@@ -85,6 +85,8 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
     detailpage.search("span.minorCacheDetails img")[0]["alt"].match(/Size: (.+)/)
     size = $1
     coords = detailpage.search("span[id = 'uxLatLon']")[0].inner_text
+    detailpage.search("div[id='ctl00_ContentBody_mcd2']")[0].inner_text.match(/(\d{2})\/(\d{2})\/(\d{4})/)
+    hiddendate = Time.new($3, $1, $2).to_i
     if detailpage.search("span.favorite-value").length > 0
       favcount = detailpage.search("span.favorite-value")[0].inner_text
     else
@@ -98,6 +100,7 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
     size = "-"
     coords = "-"
     favcount = 0
+    hiddendate = 0
     gcid = "NOT_PUBLISHED"
   end
   print "OK\n"
@@ -111,7 +114,7 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
   sleep (1..5).to_a.sample
 
   # Insert into DB
-  db.execute("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, coords, favcount, logtype, logdate, cachetype, area, favorite, log) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gcid, name, status, owner, difficulty, terrain, size, coords, favcount, logtype, logdate, cachetype, area, favorite, log]) 
+  db.execute("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log]) 
 end
 
 db.close
