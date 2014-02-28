@@ -28,7 +28,7 @@ begin
     db = SQLite3::Database.open CACHEDB
   else
     db = SQLite3::Database.new CACHEDB
-    db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, gcid TEXT, name TEXT, owner TEXT, cachetype TEXT, size TEXT, difficulty REAL, terrain REAL, coords TEXT, area TEXT, hiddendate INTEGER, status TEXT, favcount INTEGER, logtype TEXT, logdate INTEGER, favorite INTEGER, log TEXT)"
+    db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, gcid TEXT, name TEXT, owner TEXT, cachetype TEXT, size TEXT, difficulty REAL, terrain REAL, coords TEXT, area TEXT, hiddendate INTEGER, status TEXT, favcount INTEGER, guid TEXT, logtype TEXT, logdate INTEGER, favorite INTEGER, log TEXT)"
   end
 rescue SQLite3::Exception => e
   puts "Fehler beim Zugriff oder Anlegen der Datenbank."
@@ -72,6 +72,8 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
   end
   nbsp = Nokogiri::HTML("&nbsp;").text
   area = cachetable.css("td")[4].inner_text.gsub(nbsp, "").strip
+  cachetable.css("a")[0]["href"].match(/http:\/\/www\.geocaching\.com\/seek\/cache_details\.aspx\?guid=(.+)/)
+  guid = $1
 
   # Get detailed details
   print "Loading details for #{name}..."
@@ -114,7 +116,7 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
   sleep (1..5).to_a.sample
 
   # Insert into DB
-  db.execute("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log]) 
+  db.execute("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid]) 
 end
 
 db.close
