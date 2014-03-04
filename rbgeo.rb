@@ -50,16 +50,13 @@ end
 puts "Loading caches which are updated or not in the DB at all..."
 
 # List my founds
-a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
+a.get(MY_PAGE).search("table.Table tr").reverse_each do |cachetable|
 
   # Get basic details
   favorite = 0
   status = "Available"
   name = cachetable.css("a")[1].inner_text.strip
   logtype = cachetable.css("img")[0]["title"].strip
-  if (logtype.eql? "Will Attend")
-    next
-  end
   if cachetable.css("a > span[class = 'Strike']").length > 0
     status = "Disabled"
   elsif cachetable.css("a > span[class = 'Strike OldWarning']").length > 0
@@ -81,8 +78,9 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
   # Check if detailed details differ from stored details or check if the cache isn't stored at all
   storedcache = db.execute("SELECT * FROM caches WHERE guid = '#{guid}'")
   if (storedcache.empty?) || (storedcache[0][2] != name) || (storedcache[0][14] != logtype) || (storedcache[0][11] != status) || (storedcache[0][15].to_i != logdate) || (storedcache[0][16].to_i != favorite) || (storedcache[0][9] != area)
+
     # Get detailed details
-    print "Loading details for #{name}..."
+    print "Parsing #{name}: loading details..."
     begin
       detailpage = a.get(cachetable.css("a")[1]["href"])
       owner = detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0].inner_text
@@ -111,17 +109,25 @@ a.get(MY_PAGE).search("table.Table tr").each do |cachetable|
       hiddendate = 0
       gcid = "NOT_PUBLISHED"
     end
-    print "OK\n"
     sleep (1..5).to_a.sample
 
     # Get the log
-    print "Loading log for #{name}..." 
+    print "loading log..." 
     log = a.get(cachetable.css("a")[2]["href"]).search("span[id = 'ctl00_ContentBody_LogBookPanel1_LogText']")[0].inner_text.strip
-    print "OK\n"
     sleep (1..5).to_a.sample
 
+    print "storing into the database..."
     # Insert into DB
-    db.execute("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid])
+    if (storedcache.empty?) # Insert all values in the DB when cache is not stored at all
+      statement = db.prepare("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+      statement.execute(gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid)
+      statement.close
+    else # Update all values if the cache is stored, but not found or attended
+      statement = db.prepare("UPDATE caches SET gcid = ?, name = ?, status = ?, owner = ?, difficulty = ?, terrain = ?, size = ?, hiddendate = ?, coords = ?, favcount = ?, logtype = ?, logdate = ?, cachetype = ?, area = ?, favorite = ?, log = ? WHERE guid = ?")  
+      statement.execute(gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid)
+      statement.close
+    end
+    print "OK\n" 
   end 
 end
 
