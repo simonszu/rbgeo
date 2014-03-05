@@ -1,4 +1,7 @@
 ---
 credentials:
   username: 
-  password: 
+  password:
+
+generate:
+  path:

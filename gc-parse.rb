@@ -8,16 +8,16 @@ def gcparse(gc_user, gc_passwd)
 
   # Create or open the database
   begin
-    if File.file?(CACHEDB)
-      db = SQLite3::Database.open CACHEDB
+    if File.file?(GC_CACHEDB)
+      db = SQLite3::Database.open GC_CACHEDB
     else
-      db = SQLite3::Database.new CACHEDB
+      db = SQLite3::Database.new GC_CACHEDB
       db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, gcid TEXT, name TEXT, owner TEXT, cachetype TEXT, size TEXT, difficulty REAL, terrain REAL, coords TEXT, area TEXT, hiddendate INTEGER, status TEXT, favcount INTEGER, guid TEXT, logtype TEXT, logdate INTEGER, favorite INTEGER, log TEXT)"
     end
   rescue SQLite3::Exception => e
     puts "Fehler beim Zugriff oder Anlegen der Datenbank."
     puts e
-    puts "In den meisten Fällen reicht es, das Datenbankfile #{CACHEDB} zu löschen, und alle Caches erneut einzulesen."
+    puts "In den meisten Fällen reicht es, das Datenbankfile #{GC_CACHEDB} zu löschen, und alle Caches erneut einzulesen."
     exit
   end
 
