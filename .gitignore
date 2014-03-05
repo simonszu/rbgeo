@@ -1,2 +1,3 @@
 config.yaml
-caches.db
+gc-caches.db
+output/*
