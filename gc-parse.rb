@@ -6,21 +6,6 @@ def gcparse(gc_user, gc_passwd)
   a = Mechanize.new {|agent|
     agent.user_agent_alias = 'Mac Safari'}
 
-  # Create or open the database
-  begin
-    if File.file?(GC_CACHEDB)
-      db = SQLite3::Database.open GC_CACHEDB
-    else
-      db = SQLite3::Database.new GC_CACHEDB
-      db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, gcid TEXT, name TEXT, owner TEXT, cachetype TEXT, size TEXT, difficulty REAL, terrain REAL, coords TEXT, area TEXT, hiddendate INTEGER, status TEXT, favcount INTEGER, guid TEXT, logtype TEXT, logdate INTEGER, favorite INTEGER, log TEXT)"
-    end
-  rescue SQLite3::Exception => e
-    puts "Fehler beim Zugriff oder Anlegen der Datenbank."
-    puts e
-    puts "In den meisten Fällen reicht es, das Datenbankfile #{GC_CACHEDB} zu löschen, und alle Caches erneut einzulesen."
-    exit
-  end
-
   puts "Logging in..."
 
   # Login
@@ -60,7 +45,7 @@ def gcparse(gc_user, gc_passwd)
     guid = $1
 
     # Check if detailed details differ from stored details or check if the cache isn't stored at all
-    storedcache = db.execute("SELECT * FROM caches WHERE guid = '#{guid}'")
+    storedcache = @db.execute("SELECT * FROM caches WHERE guid = '#{guid}'")
     if (storedcache.empty?) || (storedcache[0][2] != name) || (storedcache[0][14] != logtype) || (storedcache[0][11] != status) || (storedcache[0][15].to_i != logdate) || (storedcache[0][16].to_i != favorite) || (storedcache[0][9] != area)
       if (!storedcache.empty? && (storedcache[0][15].to_i >= logdate))
         next
@@ -105,11 +90,11 @@ def gcparse(gc_user, gc_passwd)
       print "storing into the database..."
       # Insert into DB
       if (storedcache.empty?) # Insert all values in the DB when cache is not stored at all
-        statement = db.prepare("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        statement = @db.prepare("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
         statement.execute(gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid)
         statement.close
       else # Update all values if the cache is stored, but not found or attended
-        statement = db.prepare("UPDATE caches SET gcid = ?, name = ?, status = ?, owner = ?, difficulty = ?, terrain = ?, size = ?, hiddendate = ?, coords = ?, favcount = ?, logtype = ?, logdate = ?, cachetype = ?, area = ?, favorite = ?, log = ? WHERE guid = ?")  
+        statement = @db.prepare("UPDATE caches SET gcid = ?, name = ?, status = ?, owner = ?, difficulty = ?, terrain = ?, size = ?, hiddendate = ?, coords = ?, favcount = ?, logtype = ?, logdate = ?, cachetype = ?, area = ?, favorite = ?, log = ? WHERE guid = ?")  
         statement.execute(gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid)
         statement.close
       end
@@ -117,5 +102,4 @@ def gcparse(gc_user, gc_passwd)
     end 
   end
 
-  db.close
 end
