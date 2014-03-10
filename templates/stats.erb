@@ -1,0 +1,11 @@
+<%= header_partial %>
+<h1>Statistik</h1>
+<ul>
+  <li>Globale Gesamtmenge: <strong><%= @db.execute("SELECT * FROM caches").length %></strong> Funde an <strong><%= @db.execute("SELECT DISTINCT logdate FROM caches").length %></strong> Cachetagen bei <strong><%= (Time.now.to_i - @db.execute("SELECT logdate FROM caches ORDER BY logdate ASC LIMIT 1")[0][0])/86400 %></strong> Tagen gesamt (<%= ((Time.now.to_i - @db.execute("SELECT logdate FROM caches ORDER BY logdate ASC LIMIT 1")[0][0])/86400)/(@db.execute("SELECT DISTINCT logdate FROM caches").length) %>%).</li>
+  <li>Globaler Durchschnitt: <strong><%= ((@db.execute("SELECT * FROM caches").length)/(@db.execute("SELECT DISTINCT logdate FROM caches").length).to_f).round(2) %></strong> pro Cache-Tag, 
+    <strong><%= ((@db.execute("SELECT * FROM caches").length)/((Time.now.to_i - @db.execute("SELECT logdate FROM caches ORDER BY logdate ASC LIMIT 1")[0][0])/86400).to_f).round(2) %></strong> pro Tag, 
+    <strong><%= ((@db.execute("SELECT * FROM caches").length)/((Time.now.to_i - @db.execute("SELECT logdate FROM caches ORDER BY logdate ASC LIMIT 1")[0][0])/86400).to_f*7).round(2) %></strong> pro Woche,
+    <strong><%= ((@db.execute("SELECT * FROM caches").length)/((Time.now.to_i - @db.execute("SELECT logdate FROM caches ORDER BY logdate ASC LIMIT 1")[0][0])/86400).to_f*28).round(2) %></strong> pro Monat
+  </li>
+</ul>
+<%= footer_partial %>

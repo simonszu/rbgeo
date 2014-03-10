@@ -79,6 +79,7 @@ def gcparse(gc_user, gc_passwd)
         favcount = 0
         hiddendate = 0
         gcid = "NOT_PUBLISHED"
+        next
       end
       sleep (1..5).to_a.sample
 
