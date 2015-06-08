@@ -60,7 +60,7 @@ def parse_owns_gc(gc_user, gc_passwd)
 
     # If the cache isn't already in the DB or if the details have changed...
     # But check if the previous log was already final if the log-attributes should have changed
-    if (Ownedcache.where(:guid => guid).empty? || (storedcache.name != name) || (((storedcache.logtype != logtype) || (storedcache.logdate != logdate)) && !is_final_log) || (storedcache.status != status) ||  (storedcache.favorite != favorite) || (storedcache.area != area))
+    if (Ownedcache.where(:guid => guid).empty? || (storedcache.name != name) || (storedcache.logtype != logtype) || (storedcache.logdate != logdate)|| (storedcache.status != status) ||  (storedcache.favorite != favorite) || (storedcache.area != area))
       # Get detailed details
       begin
 

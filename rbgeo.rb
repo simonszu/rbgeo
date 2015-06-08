@@ -27,7 +27,8 @@ path = config['generate']['path']
 init_db
 
 parse_founds_gc(gc_user, gc_passwd)
-generate_website(path, gc_user)
+parse_owns_gc(gc_user, gc_passwd)
+#generate_website(path, gc_user)
 
 ActiveRecord::Base.connection.close
 puts "Bye."

@@ -49,7 +49,7 @@ def init_db ()
 
   # Table for caches owned
   ActiveRecord::Schema.define do 
-    unless ActiveRecord::Base.connection.tables.include? 'caches'
+    unless ActiveRecord::Base.connection.tables.include? 'ownedcaches'
       puts "Initializing database..."
       create_table :ownedcaches do |table|
         table.column :gcid, :string
