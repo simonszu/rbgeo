@@ -2,8 +2,9 @@
 
 # coding: utf-8
 
-def parse_gc(gc_user, gc_passwd)
+def parse_founds_gc(gc_user, gc_passwd)
 
+  puts "Reading your founds from geocaching.com"
   # Create a new agent
   a = Mechanize.new {|agent|
     agent.user_agent_alias = 'Mac Safari'}
@@ -70,7 +71,6 @@ def parse_gc(gc_user, gc_passwd)
         if (!Cache.where(:guid => guid).empty? && (storedcache.logdate.to_i > logdate))
           next
         end
-        print "New or updated cache \"#{name}\": loading details..."
 
         # Open the details page of the cache 
         detailpage = a.get(cachetable.css("a")[1]["href"])
@@ -78,6 +78,11 @@ def parse_gc(gc_user, gc_passwd)
         # Get some attributes of the cache
         # First the owner
         owner = detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0].inner_text
+        if (owner.eql? gc_user)
+          next
+        end
+
+        print "New or updated cache \"#{name}\": loading details..."
 
         # The Difficulty
         detailpage.search("span[id = 'ctl00_ContentBody_uxLegendScale'] img")[0]["alt"].match(/(.{1,3}) out of 5/)
@@ -133,7 +138,6 @@ def parse_gc(gc_user, gc_passwd)
       print "storing into the database..."
 
       cache = Cache.where(:guid => guid).first_or_create
-
       # Update log attributes only if the log isn't final
       if (!is_final_log)
         cache.logtype = logtype

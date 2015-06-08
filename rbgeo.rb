@@ -11,7 +11,6 @@ require 'sqlite3'
 require 'fileutils'
 require 'erb'
 require 'active_record'
-require 'date'
 
 project_root = File.dirname(File.absolute_path(__FILE__))
 Dir.glob(project_root + '/lib/*.rb', &method(:require))
@@ -27,7 +26,7 @@ path = config['generate']['path']
 # Connect and initialize db
 init_db
 
-#parse_gc(gc_user, gc_passwd)
+parse_founds_gc(gc_user, gc_passwd)
 generate_website(path, gc_user)
 
 ActiveRecord::Base.connection.close
