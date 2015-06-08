@@ -10,11 +10,10 @@ require 'open-uri'
 require 'sqlite3'
 require 'fileutils'
 require 'erb'
+require 'active_record'
 
-require_relative 'constants.rb'
-require_relative 'gc-parse.rb'
-require_relative 'generate.rb'
-
+project_root = File.dirname(File.absolute_path(__FILE__))
+Dir.glob(project_root + '/lib/*.rb', &method(:require))
 puts "This is rbgeo version 0.1."
 
 # Load the config
@@ -24,23 +23,11 @@ gc_passwd = config['credentials']['password']
 
 path = config['generate']['path']
 
-# Connect to DB
-begin
-  if File.file?(GC_CACHEDB)
-    @db = SQLite3::Database.open GC_CACHEDB
-  else
-    @db = SQLite3::Database.new GC_CACHEDB
-    @db.execute "CREATE TABLE IF NOT EXISTS caches(id INTEGER PRIMARY KEY, gcid TEXT, name TEXT, owner TEXT, cachetype TEXT, size TEXT, difficulty REAL, terrain REAL, coords TEXT, area TEXT, hiddendate INTEGER, status TEXT, favcount INTEGER, guid TEXT, logtype TEXT, logdate INTEGER, favorite INTEGER, log TEXT)"
-  end
-rescue SQLite3::Exception => e
-  puts "Fehler beim Zugriff oder Anlegen der Datenbank."
-  puts e
-  puts "In den meisten Fällen reicht es, das Datenbankfile #{GC_CACHEDB} zu löschen, und alle Caches erneut einzulesen."
-  exit
-end
+# Connect and initialize db
+init_db
 
-#gcparse(gc_user, gc_passwd)
-generate(path, gc_user)
+#parse_gc(gc_user, gc_passwd)
+generate_website(path, gc_user)
 
-@db.close
+ActiveRecord::Base.connection.close
 puts "Bye."

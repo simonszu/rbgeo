@@ -1,4 +1,4 @@
-
+# Defines some constants
 
 CONFIG_FILE = 'config.yaml'
 GC_CACHEDB = 'gc-caches.db'
@@ -10,3 +10,5 @@ LOGTYPES = ["Found it", "Didn't find it", "Will attend", "Owner Maintenance", "N
 CACHETYPES = ["Multi-cache", "Traditional Cache", "Event Cache", "Unknown Cache", "Webcam Cache", "Lost and Found Event Cache", "Earthcache"]
 
 FINAL_LOGTYPES = ['Found it', 'Attended', 'Archive', 'Webcam Photo Taken']
+
+MAX_SLEEPTIME = 5

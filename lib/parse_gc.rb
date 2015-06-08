@@ -1,6 +1,8 @@
+# Connects to geocaching.com and scrapes the logged caches
+
 # coding: utf-8
 
-def gcparse(gc_user, gc_passwd)
+def parse_gc(gc_user, gc_passwd)
 
   # Create a new agent
   a = Mechanize.new {|agent|
@@ -26,50 +28,87 @@ def gcparse(gc_user, gc_passwd)
     status = "Available"
     name = cachetable.css("a")[1].inner_text.strip
     logtype = cachetable.css("img")[0]["title"].strip
+
+    # Determine if the cache is normal, disabled or archived
     if cachetable.css("a > span[class = 'Strike']").length > 0
       status = "Disabled"
     elsif cachetable.css("a > span[class = 'Strike OldWarning']").length > 0
       status = "Archived"
     end
+
+    # Parse the logdate of the cache
     cachetable.css("td")[2].inner_text.strip.match(/(\d{2})\/(\d{2})\/(\d{4})/)
     logdate = Time.new($3, $1, $2).to_i
+
+    # Check if the cache is favorited by the user
     if cachetable.css("img").length == 3
       cachetype = cachetable.css("img")[2]["title"].strip
       favorite = 1
     else
       cachetype = cachetable.css("img")[1]["title"].strip
     end
+
+    # Get the GUID of the cache
     nbsp = Nokogiri::HTML("&nbsp;").text
     area = cachetable.css("td")[4].inner_text.gsub(nbsp, "").strip
     cachetable.css("a")[0]["href"].match(/http:\/\/www\.geocaching\.com\/seek\/cache_details\.aspx\?guid=(.+)/)
     guid = $1
 
-    # Check if detailed details differ from stored details or check if the cache isn't stored at all
-    storedcache = @db.execute("SELECT * FROM caches WHERE guid = '#{guid}'")
-    if (storedcache.empty?) || (storedcache[0][2] != name) || (storedcache[0][14] != logtype) || (storedcache[0][11] != status) || (storedcache[0][15].to_i != logdate) || (storedcache[0][16].to_i != favorite) || (storedcache[0][9] != area)
-      if (!storedcache.empty? && (storedcache[0][15].to_i >= logdate))
-        next
-      end
+    # Try to get the identical cache from the database
+    storedcache = Cache.where(:guid => guid).first
+
+    # If the stored log is already a final one, preserve it and update only the other attributes
+    is_final_log = (!Cache.where(:guid => guid).empty?) && (FINAL_LOGTYPES.include? storedcache.logtype)
+
+    # If the cache isn't already in the DB or if the details have changed...
+    # But check if the previous log was already final if the log-attributes should have changed
+    if (Cache.where(:guid => guid).empty? || (storedcache.name != name) || (((storedcache.logtype != logtype) || (storedcache.logdate != logdate)) && !is_final_log) || (storedcache.status != status) ||  (storedcache.favorite != favorite) || (storedcache.area != area))
       # Get detailed details
-      print "Parsing #{name}: loading details..."
       begin
+
+        # If there are multiple logs present, store only the latest one.
+        if (!Cache.where(:guid => guid).empty? && (storedcache.logdate.to_i > logdate))
+          next
+        end
+        print "New or updated cache \"#{name}\": loading details..."
+
+        # Open the details page of the cache 
         detailpage = a.get(cachetable.css("a")[1]["href"])
+
+        # Get some attributes of the cache
+        # First the owner
         owner = detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0].inner_text
+
+        # The Difficulty
         detailpage.search("span[id = 'ctl00_ContentBody_uxLegendScale'] img")[0]["alt"].match(/(.{1,3}) out of 5/)
         difficulty = $1.to_f
+
+        # The terrain rating
         detailpage.search("span[id = 'ctl00_ContentBody_Localize12'] img")[0]["alt"].match(/(.{1,3}) out of 5/)
         terrain = $1.to_f
+
+        # The size of the cache container
         detailpage.search("span.minorCacheDetails img")[0]["alt"].match(/Size: (.+)/)
         size = $1
+
+        # The coordinates of the cache
         coords = detailpage.search("span[id = 'uxLatLon']")[0].inner_text
+
+        # The date the cache was hidden
         detailpage.search("div[id='ctl00_ContentBody_mcd2']")[0].inner_text.match(/(\d{2})\/(\d{2})\/(\d{4})/)
         hiddendate = Time.new($3, $1, $2).to_i
+
+        # The favcount of the cache
         if detailpage.search("span.favorite-value").length > 0
           favcount = detailpage.search("span.favorite-value")[0].inner_text
         else
           favcount = 0
         end
+
+        # The GC-ID
         gcid = detailpage.search("span[id='ctl00_ContentBody_CoordInfoLinkControl1_uxCoordInfoCode']")[0].inner_text
+
+      # If something goes wrong, use some default values
       rescue
         owner = "N.N"
         difficulty = 0
@@ -81,26 +120,44 @@ def gcparse(gc_user, gc_passwd)
         gcid = "NOT_PUBLISHED"
         next
       end
-      sleep (1..5).to_a.sample
+
+      # Sleep for a random time between 1 and 5 seconds to not hammer the GC.com servers with requests
+      sleep (0..MAX_SLEEPTIME).to_a.sample
 
       # Get the log
       print "loading log..." 
       log = a.get(cachetable.css("a")[2]["href"]).search("span[id = 'ctl00_ContentBody_LogBookPanel1_LogText']")[0].inner_text.strip
-      sleep (1..5).to_a.sample
+      sleep (0..MAX_SLEEPTIME).to_a.sample
 
+      # Store every value into the database
       print "storing into the database..."
-      # Insert into DB
-      if (storedcache.empty?) # Insert all values in the DB when cache is not stored at all
-        statement = @db.prepare("INSERT INTO caches (gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        statement.execute(gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid)
-        statement.close
-      else # Update all values if the cache is stored, but not found or attended
-        statement = @db.prepare("UPDATE caches SET gcid = ?, name = ?, status = ?, owner = ?, difficulty = ?, terrain = ?, size = ?, hiddendate = ?, coords = ?, favcount = ?, logtype = ?, logdate = ?, cachetype = ?, area = ?, favorite = ?, log = ? WHERE guid = ?")  
-        statement.execute(gcid, name, status, owner, difficulty, terrain, size, hiddendate, coords, favcount, logtype, logdate, cachetype, area, favorite, log, guid)
-        statement.close
-      end
-      print "OK\n" 
-    end 
-  end
 
+      cache = Cache.where(:guid => guid).first_or_create
+
+      # Update log attributes only if the log isn't final
+      if (!is_final_log)
+        cache.logtype = logtype
+        cache.logdate = logdate
+        cache.log = log
+      end
+
+      # Update every other attribute and save the record
+      cache.gcid = gcid
+      cache.name = name
+      cache.status = status
+      cache.owner = owner
+      cache.difficulty = difficulty
+      cache.terrain = terrain
+      cache.size = size
+      cache.hiddendate = hiddendate
+      cache.coords = coords
+      cache.favcount = favcount 
+      cache.cachetype = cachetype 
+      cache.area = area
+      cache.favorite = favorite
+      cache.save
+
+      print "OK\n"
+    end
+  end 
 end
