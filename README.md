@@ -20,5 +20,4 @@ Ich freue mich über jegliche Beteiligung. Einfach forken, und Push-Requests sch
 
 Lizenz
 ------
-Momentan die MIT-Opensource-Lizenz. Nutzt das Script und modifiziert es, wie ihr lustig seid, aber entfernt bitte vorhandene Copyright-Hinweise nicht.
-Ich untersage allerdings ausdrücklich die militärische oder kommerzielle Nutzung.
+GPLv2
