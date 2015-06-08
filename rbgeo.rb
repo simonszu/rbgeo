@@ -11,6 +11,7 @@ require 'sqlite3'
 require 'fileutils'
 require 'erb'
 require 'active_record'
+require 'date'
 
 project_root = File.dirname(File.absolute_path(__FILE__))
 Dir.glob(project_root + '/lib/*.rb', &method(:require))

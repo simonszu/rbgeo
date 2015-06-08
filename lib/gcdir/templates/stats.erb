@@ -1,7 +1,6 @@
 <%= header_partial%>
 <h1>Statistik</h1>
 <ul>
-  <li>Globale Gesamtmenge: <strong><%= Cache.all.length %></strong> Funde an <strong><%= Cache.select(:logdate).distinct.length %></strong> Cachetagen bei <strong><%= (Time.now.to_i - Cache.first.logdate.to_i/86400) %></strong> Tagen gesamt.
-  </li>
+  <%= general_stats %>
 </ul>
 <%= footer_partial %>

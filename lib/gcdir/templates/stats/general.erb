@@ -1,0 +1,4 @@
+<li>Globale Gesamtmenge: <strong><%= Cache.all.length %></strong> Funde an <strong><%= Cache.select(:logdate).distinct.length %></strong> Cachetagen bei <strong><%= (Date.parse(Time.now.strftime('%Y/%m/%d')) - Time.at(Cache.first.logdate).to_date).to_i %></strong> Tagen gesamt.
+</li>
+<li>Gesamtzahl aller Nichtfunde: <strong><%= Cache.where(:logtype => "Didn't find it").length %></strong> DNFs.</li>
+<li>Gesamtzahl aller Funde: <strong><%= Cache.where(:logtype => "Found it").length %></strong> Finds.</li>
