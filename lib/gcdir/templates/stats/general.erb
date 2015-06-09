@@ -27,31 +27,43 @@ foundspermonthinlastyear  = (cachesinlastyear.to_f/12.to_f).round(2)
 
 # Calculate time periods with most founds
 days = Array (dateoffirstcache..Time.now.to_date)
-months = (dateoffirstcache..Time.now.to_date).group_by(&:month).map
-# Day with most caches
 mostfoundperday = 0
 maxday = ""
+maxweekend = ""
+mostfoundperweekend = 0
+maxweek = ""
+mostfoundperweek = 0
+maxmonth = ""
+mostfoundpermonth = 0
+maxyear = ""
+mostfoundperyear = 0
 weekends = Array.new
+weeks = Array.new
 
+# Day with most caches, split the days in some ranges
 days.each_with_index do |day, index|
   # Calculate the weekends
   if day.sunday? && (index-1 > 0)
     thisweekend = [days[index], days[index-1]]
     weekends.push(thisweekend)
   end
+  # Calculate the weeks
+  if day.sunday? && (index-6 > 0)
+    thisweekrange = [days[index].to_time.to_i, days[index-6].to_time.to_i]
+    weeks.push(thisweekrange)
+  end
   # Calculate the days with the most finds
-  foundsinthisday = Cache.where("logdate = ? AND logtype = ?", day.to_time.to_i, "Found it").length + Cache.where("logdate = ? AND logtype = ?", day.to_time.to_i, "Attended").length + Cache.where("logdate = ? AND logtype = ?", day.to_time.to_i, "Webcam Photo Taken").length
+  foundsinthisday = Cache.where("logdate = ? AND (logtype = ? OR logtype = ? OR logtype = ?)", day.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length
   if foundsinthisday > mostfoundperday
     mostfoundperday = foundsinthisday
     maxday = day
   end
 end
+maxdaystring = maxday.strftime('%d.%m.%Y')
 
 # Calculate the weekend with the most finds
-maxweekend = ""
-mostfoundperweekend = 0
 weekends.each do |weekend|
-  foundsinthisweekend = Cache.where("logdate = ? AND logtype = ?", weekend[0].to_time.to_i, "Found it").length + Cache.where("logdate = ? AND logtype = ?", weekend[0].to_time.to_i, "Attended").length + Cache.where("logdate = ? AND logtype = ?", weekend[0].to_time.to_i, "Webcam Photo Taken").length + Cache.where("logdate = ? AND logtype = ?", weekend[1].to_time.to_i, "Found it").length + Cache.where("logdate = ? AND logtype = ?", weekend[1].to_time.to_i, "Attended").length + Cache.where("logdate = ? AND logtype = ?", weekend[1].to_time.to_i, "Webcam Photo Taken").length
+  foundsinthisweekend = Cache.where("(logdate = ? OR logdate = ?) AND (logtype = ? OR logtype = ? OR logtype = ?)", weekend[0].to_time.to_i, weekend[1].to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length
   if foundsinthisweekend > mostfoundperweekend
     mostfoundperweekend = foundsinthisweekend
     maxweekend = weekend
@@ -59,7 +71,39 @@ weekends.each do |weekend|
 end
 maxweekendstring = maxweekend[1].strftime('%d.%m.%Y')+"/"+maxweekend[0].strftime('%d.%m.%Y')
 
+# Calculate the week with the most finds
+weeks.each do |week|
+  foundsinthisweek = Cache.where("logdate <= ? AND logdate >= ?  AND (logtype = ? OR logtype = ? OR logtype = ?)", week[0], week[1], "Found it", "Attended", "Webcam Photo Taken").length
+  if foundsinthisweek > mostfoundperweek
+    mostfoundperweek = foundsinthisweek
+    maxweek = week
+  end
+end
+maxweekstring = Time.at(maxweek[1]).strftime('%d.%m.%Y')+"-"+Time.at(maxweek[0]).strftime('%d.%m.%Y')
 
+# Calculate the month with the most finds
+months_between(Date.new(dateoffirstcache.year, dateoffirstcache.month), Date.new(Time.now.to_date.year, Time.now.to_date.month)).each do |month|
+  startday = month
+  endday = month.next_month.prev_day
+  foundsinthismonth = Cache.where("logdate <= ? AND logdate >= ?  AND (logtype = ? OR logtype = ? OR logtype = ?)", endday.to_time.to_i, startday.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length
+  if foundsinthismonth > mostfoundpermonth
+    mostfoundpermonth = foundsinthismonth
+    maxmonth = month
+  end
+end
+maxmonthstring = maxmonth.strftime('%m.%Y')
+
+# Calculate the year with the most finds
+years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).each do |year|
+  startday = year
+  endday = year.next_year.prev_day
+  foundsinthisyear = Cache.where("logdate <= ? AND logdate >= ?  AND (logtype = ? OR logtype = ? OR logtype = ?)", endday.to_time.to_i, startday.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length
+  if foundsinthisyear > mostfoundperyear
+    mostfoundperyear = foundsinthisyear
+    maxyear = year
+  end
+end
+maxyearstring = maxyear.strftime('%Y')
 
 %>
 <li><%= maxday %></li>
@@ -70,5 +114,8 @@ maxweekendstring = maxweekend[1].strftime('%d.%m.%Y')+"/"+maxweekend[0].strftime
 <li>Funde in den letzten 365 Tagen: <strong><%= cachesinlastyear %></strong> Funde.
 <li>Cache-Tage in den letzten 365 Tagen: <strong><%= cachedaysinlastyear %></strong> Tage.</li>
 <li>Durchschnitt über die letzten 365 Tage: <strong><%= foundspercachedayinlastyear %></strong> Funde/Cache-Tag, <strong><%= foundsperdayinlastyear %></strong> Funde/Tag, <strong><%= foundsperweekinlastyear %></strong> Funde/Woche, <strong><%= foundspermonthinlastyear %></strong> Funde/Monat. </li>
-<li>Tag mit den meisten Funden: <%= maxday.strftime('%d.%m.%Y') %> (<strong><%= mostfoundperday %></strong> Funde).</li>
+<li>Tag mit den meisten Funden: <%= maxdaystring %> (<strong><%= mostfoundperday %></strong> Funde).</li>
 <li>Wochenende mit den meisten Funden: <%= maxweekendstring %> (<strong><%= mostfoundperweekend %></strong> Funde).</li>
+<li>Woche mit den meisten Funden: <%= maxweekstring %> (<strong><%= mostfoundperweek %></strong> Funde).</li>
+<li>Monat mit den meisten Funden: <%= maxmonthstring %> (<strong><%= mostfoundpermonth %></strong> Funde).</li>
+<li>Jahr mit den meisten Funden: <%= maxyearstring %> (<strong><%= mostfoundperyear %></strong> Funde).</li>
