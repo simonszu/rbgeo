@@ -2,6 +2,8 @@
 
 def generate_website(path, gc_user)
 
+  puts "Generating statistics website..."
+
   # Delete old generated page and create new directory for putting it
   if Dir.exist? path
     FileUtils.rm_r path
@@ -17,5 +19,5 @@ def generate_website(path, gc_user)
   genIndex("", gc_user, path)
   genDetails("../", gc_user, path)
   genStats("", gc_user, path)
- 
+
 end
