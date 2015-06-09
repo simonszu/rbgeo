@@ -30,8 +30,8 @@ def parse_owns_gc(gc_user, gc_passwd)
     name = cachetable.css("a")[1].inner_text.strip
     logtype = cachetable.css("img")[0]["title"].strip
 
-    # Caches with logtype "Found it" cannot be owned, next
-    if logtype.eql? "Found it"
+    # If the logtype clearly states that one does not own this cache, next
+    if NOT_OWNED_LOGTYPES.include? logtype
       next
     end
 

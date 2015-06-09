@@ -30,6 +30,11 @@ def parse_founds_gc(gc_user, gc_passwd)
     name = cachetable.css("a")[1].inner_text.strip
     logtype = cachetable.css("img")[0]["title"].strip
 
+    # If the logtype clearly states that this cache should be in the owned list, NEXT
+    if OWNED_LOGTYPES.include? logtype
+      next
+    end
+
     # Determine if the cache is normal, disabled or archived
     if cachetable.css("a > span[class = 'Strike']").length > 0
       status = "Disabled"
@@ -72,7 +77,7 @@ def parse_founds_gc(gc_user, gc_passwd)
           next
         end
 
-        # Open the details page of the cache 
+        # Open the details page of the cache
         detailpage = a.get(cachetable.css("a")[1]["href"])
 
         # Get some attributes of the cache
@@ -130,7 +135,7 @@ def parse_founds_gc(gc_user, gc_passwd)
       sleep (0..MAX_SLEEPTIME).to_a.sample
 
       # Get the log
-      print "loading log..." 
+      print "loading log..."
       log = a.get(cachetable.css("a")[2]["href"]).search("span[id = 'ctl00_ContentBody_LogBookPanel1_LogText']")[0].inner_text.strip
       sleep (0..MAX_SLEEPTIME).to_a.sample
 
@@ -155,13 +160,13 @@ def parse_founds_gc(gc_user, gc_passwd)
       cache.size = size
       cache.hiddendate = hiddendate
       cache.coords = coords
-      cache.favcount = favcount 
-      cache.cachetype = cachetype 
+      cache.favcount = favcount
+      cache.cachetype = cachetype
       cache.area = area
       cache.favorite = favorite
       cache.save
 
       print "OK\n"
     end
-  end 
+  end
 end
