@@ -6,13 +6,12 @@ def genDetails(prefix, user, dir)
   path_prefix = prefix
   name = user
   path = dir
-  caches = Cache.all
 
   # Generate the details page for each cache
   header_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "header.erb"), 'r').read).result(binding)
   footer_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "footer.erb"), 'r').read).result(binding)
   details_template = File.open(File.join(File.dirname(__FILE__), "templates", "details.erb"), 'r').read
-  caches.each do |cache|
+  Cache.each do |cache|
     erb = ERB.new(details_template)
     File.open(File.join(path, "details", "#{cache.gcid}.html"), "w") { |file|
     file.write(erb.result(binding))}

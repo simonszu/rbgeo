@@ -23,7 +23,7 @@ def init_db ()
   # Table for caches we don't own
   ActiveRecord::Schema.define do
     unless ActiveRecord::Base.connection.tables.include? 'caches'
-      puts "Initializing database for found caches..."
+      puts "Initializing database for not owned caches..."
       create_table :caches do |table|
         table.column :gcid, :string
         table.column :name, :string
