@@ -29,9 +29,9 @@ path = config['generate']['path']
 # Connect and initialize db
 init_db
 
-parse_founds_gc(gc_user, gc_passwd)
-parse_owns_gc(gc_user, gc_passwd)
-#generate_website(path, gc_user)
+#parse_founds_gc(gc_user, gc_passwd)
+#parse_owns_gc(gc_user, gc_passwd)
+generate_website(path, gc_user)
 
 ActiveRecord::Base.connection.close
 

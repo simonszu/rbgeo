@@ -1,9 +1,9 @@
-<% 
+<%
 cachedays = Cache.select(:logdate).distinct.length
 dateoffirstcache = Time.at(Cache.first.logdate).to_date
 alldays = (Date.parse(Time.now.strftime('%Y/%m/%d')) - dateoffirstcache).to_i
 cachedays_percent = ((cachedays.to_f/alldays.to_f)*100).round(2)
-foundcount = Cache.where(:logtype => "Found it").length
+foundcount = Cache.where("logtype = ? OR logtype = ? OR logtype = ?", "Found it", "Attended", "Webcam Photo Taken").length
 dnfcount = Cache.where(:logtype => "Didn't find it").length
 foundspercacheday = (foundcount.to_f/cachedays.to_f).round(2)
 foundsperday = (foundcount.to_f/alldays.to_f).round(2)
@@ -11,9 +11,14 @@ weeks = alldays/7
 months = alldays/30
 foundsperweek = (foundcount.to_f/weeks.to_f).round(2)
 foundspermonth = (foundcount.to_f/months.to_f).round(2)
+
 midnight = DateTime.new(DateTime.now.year, DateTime.now.month, DateTime.now.day).to_i
 lastyear = (midnight - 31556926).to_i
-cachesinlastyear = Cache.where("logdate >= ? AND logtype = ?", lastyear, "Found it").length
+foundsinlastyear = Cache.where("logdate >= ? AND logtype = ?", lastyear, "Found it").length
+attendedinlastyear = Cache.where("logdate >= ? AND logtype = ?", lastyear, "Attended").length
+webcamsinlastyear  = Cache.where("logdate >= ? AND logtype = ?", lastyear, "Webcam Photo Taken").length
+cachesinlastyear = foundsinlastyear + webcamsinlastyear + attendedinlastyear
+
 cachedaysinlastyear = Cache.select(:logdate).where("logdate >= ?", lastyear).distinct.length
 foundspercachedayinlastyear = (cachesinlastyear.to_f/cachedaysinlastyear.to_f).round(2)
 foundsperdayinlastyear = (cachesinlastyear.to_f/365.to_f).round(2)
@@ -21,24 +26,49 @@ foundsperweekinlastyear = (cachesinlastyear.to_f/52.to_f).round(2)
 foundspermonthinlastyear  = (cachesinlastyear.to_f/12.to_f).round(2)
 
 # Calculate time periods with most founds
-days = (dateoffirstcache..Time.now.to_date)
+days = Array (dateoffirstcache..Time.now.to_date)
 months = (dateoffirstcache..Time.now.to_date).group_by(&:month).map
 # Day with most caches
 mostfoundperday = 0
 maxday = ""
-days.each do |day|
-  if Cache.where("logdate = ? AND logtype = ?", day.to_time.to_i, "Found it").length > mostfoundperday
-    mostfoundperday = Cache.where("logdate = ? AND logtype = ?", day.to_time.to_i, "Found it").length
+weekends = Array.new
+
+days.each_with_index do |day, index|
+  # Calculate the weekends
+  if day.sunday? && (index-1 > 0)
+    thisweekend = [days[index], days[index-1]]
+    weekends.push(thisweekend)
+  end
+  # Calculate the days with the most finds
+  foundsinthisday = Cache.where("logdate = ? AND logtype = ?", day.to_time.to_i, "Found it").length + Cache.where("logdate = ? AND logtype = ?", day.to_time.to_i, "Attended").length + Cache.where("logdate = ? AND logtype = ?", day.to_time.to_i, "Webcam Photo Taken").length
+  if foundsinthisday > mostfoundperday
+    mostfoundperday = foundsinthisday
     maxday = day
   end
 end
+
+# Calculate the weekend with the most finds
+maxweekend = ""
+mostfoundperweekend = 0
+weekends.each do |weekend|
+  foundsinthisweekend = Cache.where("logdate = ? AND logtype = ?", weekend[0].to_time.to_i, "Found it").length + Cache.where("logdate = ? AND logtype = ?", weekend[0].to_time.to_i, "Attended").length + Cache.where("logdate = ? AND logtype = ?", weekend[0].to_time.to_i, "Webcam Photo Taken").length + Cache.where("logdate = ? AND logtype = ?", weekend[1].to_time.to_i, "Found it").length + Cache.where("logdate = ? AND logtype = ?", weekend[1].to_time.to_i, "Attended").length + Cache.where("logdate = ? AND logtype = ?", weekend[1].to_time.to_i, "Webcam Photo Taken").length
+  if foundsinthisweekend > mostfoundperweekend
+    mostfoundperweekend = foundsinthisweekend
+    maxweekend = weekend
+  end
+end
+maxweekendstring = maxweekend[1].strftime('%d.%m.%Y')+"/"+maxweekend[0].strftime('%d.%m.%Y')
+
+
+
 %>
 <li><%= maxday %></li>
 <li>Gesamtzahl aller Funde: <strong><%= foundcount %></strong> Finds.</li>
 <li>Gesamtzahl aller Nichtfunde: <strong><%= dnfcount %></strong> DNFs.</li>
 <li>Gesamtzahl aller Cache-Tage: <strong><%= cachedays %></strong> Tage von <strong><%= alldays %></strong> Gesamttagen (<%= cachedays_percent %>%).</li>
 <li>Globaler Durchschnitt: <strong><%= foundspercacheday %></strong> Funde/Cache-Tag, <strong><%= foundsperday %></strong> Funde/Tag, <strong><%= foundsperweek %></strong> Funde/Woche, <strong><%= foundspermonth %></strong> Funde/Monat.</li>
-<li> Funde in den letzten 365 Tagen: <strong><%= cachesinlastyear %></strong> Funde.
-<li> Cache-Tage in den letzten 365 Tagen: <strong><%= cachedaysinlastyear %></strong> Tage.</li>
-<li> Durchschnitt über die letzten 365 Tage: <strong><%= foundspercachedayinlastyear %></strong> Funde/Cache-Tag, <strong><%= foundsperdayinlastyear %></strong> Funde/Tag, <strong><%= foundsperweekinlastyear %></strong> Funde/Woche, <strong><%= foundspermonthinlastyear %></strong> Funde/Monat. </li>
-<li> Tag mit den meisten Funden: <%= maxday.strftime('%d.%m.%Y') %> (<strong><%= mostfoundperday %></strong> Funde).</li>
+<li>Funde in den letzten 365 Tagen: <strong><%= cachesinlastyear %></strong> Funde.
+<li>Cache-Tage in den letzten 365 Tagen: <strong><%= cachedaysinlastyear %></strong> Tage.</li>
+<li>Durchschnitt über die letzten 365 Tage: <strong><%= foundspercachedayinlastyear %></strong> Funde/Cache-Tag, <strong><%= foundsperdayinlastyear %></strong> Funde/Tag, <strong><%= foundsperweekinlastyear %></strong> Funde/Woche, <strong><%= foundspermonthinlastyear %></strong> Funde/Monat. </li>
+<li>Tag mit den meisten Funden: <%= maxday.strftime('%d.%m.%Y') %> (<strong><%= mostfoundperday %></strong> Funde).</li>
+<li>Wochenende mit den meisten Funden: <%= maxweekendstring %> (<strong><%= mostfoundperweekend %></strong> Funde).</li>
