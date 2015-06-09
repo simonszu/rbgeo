@@ -2,7 +2,7 @@
 
 def generate_website(path, gc_user)
 
-  puts "Generating statistics website..."
+  puts "Generating website..."
 
   # Delete old generated page and create new directory for putting it
   if Dir.exist? path
@@ -16,8 +16,13 @@ def generate_website(path, gc_user)
   Dir.glob(file_root + '/gcdir/*.rb', &method(:require))
 
   # Call the individual generator functions
+  print "Generating Index page..."
   genIndex("", gc_user, path)
+  print "Generating found page..."
+  genFound("", gc_user, path)
+  print "Generating details pages..."
   genDetails("../", gc_user, path)
+  print "Generating statistics...\n"
   genStats("", gc_user, path)
 
 end
