@@ -21,9 +21,9 @@ def init_db ()
 
   # Initialize the DB if not already done
   # Table for caches we don't own
-  ActiveRecord::Schema.define do 
+  ActiveRecord::Schema.define do
     unless ActiveRecord::Base.connection.tables.include? 'caches'
-      puts "Initializing database..."
+      puts "Initializing database for found caches..."
       create_table :caches do |table|
         table.column :gcid, :string
         table.column :name, :string
@@ -44,13 +44,13 @@ def init_db ()
         table.column :log, :text
       end
       puts "Database initialized!"
-    end  
+    end
   end
 
   # Table for caches owned
-  ActiveRecord::Schema.define do 
+  ActiveRecord::Schema.define do
     unless ActiveRecord::Base.connection.tables.include? 'ownedcaches'
-      puts "Initializing database..."
+      puts "Initializing database for owned caches..."
       create_table :ownedcaches do |table|
         table.column :gcid, :string
         table.column :name, :string
@@ -71,7 +71,7 @@ def init_db ()
         table.column :log, :text
       end
       puts "Database initialized!"
-    end  
+    end
   end
 end
 

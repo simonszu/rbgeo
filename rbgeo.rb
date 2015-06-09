@@ -12,6 +12,9 @@ require 'fileutils'
 require 'erb'
 require 'active_record'
 
+# Save the starting time for benchmarking
+beginning_time = Time.now
+
 project_root = File.dirname(File.absolute_path(__FILE__))
 Dir.glob(project_root + '/lib/*.rb', &method(:require))
 puts "This is rbgeo version 0.1."
@@ -31,4 +34,10 @@ parse_owns_gc(gc_user, gc_passwd)
 #generate_website(path, gc_user)
 
 ActiveRecord::Base.connection.close
+
+# Check the end time and calculate the running duration
+end_time = Time.now
+
+puts "All done. Time elapsed #{(end_time - beginning_time).round(2)} seconds."
+
 puts "Bye."
