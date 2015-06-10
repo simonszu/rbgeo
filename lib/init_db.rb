@@ -32,7 +32,8 @@ def init_db ()
         table.column :size, :string
         table.column :difficulty, :double
         table.column :terrain, :double
-        table.column :coords, :string
+        table.column :coords_lat, :string
+        table.column :coords_lon, :string
         table.column :area, :string
         table.column :hiddendate, :integer
         table.column :status, :string
@@ -59,7 +60,8 @@ def init_db ()
         table.column :size, :string
         table.column :difficulty, :double
         table.column :terrain, :double
-        table.column :coords, :string
+        table.column :coords_lat, :string
+        table.column :coords_lon, :string
         table.column :area, :string
         table.column :hiddendate, :integer
         table.column :status, :string

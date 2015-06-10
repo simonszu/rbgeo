@@ -2,7 +2,10 @@
 
 # coding: utf-8
 
-def parse_owns_gc(gc_user, gc_passwd)
+def parse_owns_gc()
+
+  gc_user = $config['credentials']['username']
+  gc_passwd = $config['credentials']['password']
 
   puts "Reading your owned caches from geocaching.com"
   # Create a new agent
@@ -100,6 +103,9 @@ def parse_owns_gc(gc_user, gc_passwd)
 
         # The coordinates of the cache
         coords = detailpage.search("span[id = 'uxLatLon']")[0].inner_text
+        coords =~ /((N|S) \d+° \d+\.\d+) ((E|W) \d+° \d+\.\d+)/
+        coords_lat = $1
+        coords_lon = $3
 
         # The date the cache was hidden
         detailpage.search("div[id='ctl00_ContentBody_mcd2']")[0].inner_text.match(/(\d{2})\/(\d{2})\/(\d{4})/)
@@ -152,7 +158,8 @@ def parse_owns_gc(gc_user, gc_passwd)
       cache.terrain = terrain
       cache.size = size
       cache.hiddendate = hiddendate
-      cache.coords = coords
+      cache.coords_lat = coords_lat
+      cache.coords_lon = coords_lon
       cache.favcount = favcount
       cache.cachetype = cachetype
       cache.area = area

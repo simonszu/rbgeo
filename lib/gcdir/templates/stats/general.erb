@@ -131,6 +131,27 @@ years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).
 end
 maxyearstring = maxyear.strftime('%Y')
 
+home_coords = [simplify_coords(home_lat), simplify_coords(home_lon)]
+mindistance = 999999999999999999999
+nearest_cachename = ""
+maxdistance = 0
+farthest_cachename = ""
+Cache.where("logtype = ? OR logtype = ? OR logtype = ?", "Found it", "Attended", "Webcam Photo Taken").each do |cache|
+  cache_coords = [simplify_coords(cache.coords_lat), simplify_coords(cache.coords_lon)]
+  distance = coord_distance(home_coords, cache_coords)
+  if distance < mindistance
+    mindistance = distance.round(2)
+    nearest_cachename = cache.name
+  end
+  if distance > maxdistance
+    maxdistance = distance.round(2)
+    farthest_cachename = cache.name
+  end
+end
+
+
+# Calculate nearest and farthest cache
+
 %>
 <table class="table">
 <tr><td>Gesamtzahl aller Funde (ohne Lab-Caches):</td><td><strong><%= foundcount %></strong> Finds.</td></tr>
@@ -147,4 +168,6 @@ maxyearstring = maxyear.strftime('%Y')
 <tr><td>Jahr mit den meisten Funden:</td><td><%= maxyearstring %> (<strong><%= mostfoundperyear %></strong> Funde).</td></tr>
 <tr><td>Längste Periode mit mindestens 1 Fund/Tag:</td><td><%= longeststreakstring %> (<strong><%= longeststreakarray.length %></strong> Tage).</td></tr>
 <tr><td>Längste Periode ohne Fund:</td><td><%= longestholestring %> (<strong><%= longestholearray.length %></strong> Tage).</td></tr>
+<tr><td>Am nächsten liegender Cache-Fund:</td><td><%= nearest_cachename %> (<% if mindistance > 1000 %><strong><%= (mindistance/1000).round(2) %></strong> Kilometer <% else %><strong><%= mindistance %></strong> Meter <% end %>).</td></tr>
+<tr><td>Am weitesten entfernter Cache-Fund:</td><td><%= farthest_cachename %> (<% if maxdistance > 1000 %><strong><%= (maxdistance/1000).round(2) %></strong> Kilometer <% else %><strong><%= maxdistance %></strong> Meter <% end %>).</td></tr>
 </table>

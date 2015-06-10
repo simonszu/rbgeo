@@ -11,7 +11,6 @@ require 'sqlite3'
 require 'fileutils'
 require 'erb'
 require 'active_record'
-require 'geo-distance'
 
 # Save the starting time for benchmarking
 beginning_time = Time.now
@@ -20,22 +19,15 @@ project_root = File.dirname(File.absolute_path(__FILE__))
 Dir.glob(project_root + '/lib/*.rb', &method(:require))
 puts "This is rbgeo version 0.1."
 
-# Load the config
-config = YAML::load(File.open(File.join(File.dirname(__FILE__), CONFIG_FILE)))
-gc_user = config['credentials']['username']
-gc_passwd = config['credentials']['password']
-
-path = config['generate']['path']
-
-home_lat = config['homekoords']['lat']
-home_lon = config['homekoords']['lon']
+# Load the config and make it globally accessible for every function
+$config = YAML::load(File.open(File.join(File.dirname(__FILE__), CONFIG_FILE)))
 
 # Connect and initialize db
 init_db
 
-#parse_founds_gc(gc_user, gc_passwd)
-#parse_owns_gc(gc_user, gc_passwd)
-generate_website(path, gc_user)
+#parse_founds_gc()
+#parse_owns_gc()
+generate_website()
 
 ActiveRecord::Base.connection.close
 

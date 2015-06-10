@@ -1,6 +1,9 @@
 # Generates the statistics website
 
-def generate_website(path, gc_user)
+def generate_website()
+
+  gc_user = $config['credentials']['username']
+  path = $config['generate']['path']
 
   puts "Generating website..."
 
