@@ -105,6 +105,36 @@ years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).
 end
 maxyearstring = maxyear.strftime('%Y')
 
+# Calculating longest time period with min 1 find per day
+longestfindstreak = 0
+rangeoflongestfindstreak = ""
+days.each do |day|
+  # Specifies some variables for the inner loop
+  thisday = day
+  thisstreak = 0
+  thisrange = Array.new
+  # If there is no cache on this day, skip to the next day
+  if (Cache.where("logdate = ?", thisday.to_time.to_i).length == 0)
+    next
+  end
+
+  # Measure the range. Add days to the range until the next day has no caches any more
+  loop do
+    thisstreak = thisstreak+1
+    thisrange.push(thisday)
+    thisday = thisday.next_day
+    break if (Cache.where("logdate = ?", thisday.to_time.to_i).length == 0)
+  end
+
+  # Store the maximum range
+  if thisstreak > longestfindstreak
+    longestfindstreak = thisstreak
+    rangeoflongestfindstreak = thisrange
+  end
+end
+rangeoflongestfindstreakstring = rangeoflongestfindstreak.first.strftime('%d.%m.%Y')+"-"+rangeoflongestfindstreak.last.strftime('%d.%m.%Y')
+
+
 %>
 <li><%= maxday %></li>
 <li>Gesamtzahl aller Funde: <strong><%= foundcount %></strong> Finds.</li>
@@ -119,3 +149,4 @@ maxyearstring = maxyear.strftime('%Y')
 <li>Woche mit den meisten Funden: <%= maxweekstring %> (<strong><%= mostfoundperweek %></strong> Funde).</li>
 <li>Monat mit den meisten Funden: <%= maxmonthstring %> (<strong><%= mostfoundpermonth %></strong> Funde).</li>
 <li>Jahr mit den meisten Funden: <%= maxyearstring %> (<strong><%= mostfoundperyear %></strong> Funde).</li>
+<li>Längster Zeitraum mit mindestens 1 Fund/Tag: <%= rangeoflongestfindstreakstring %> (<strong><%= longestfindstreak %></strong> Tage).</li>

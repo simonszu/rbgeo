@@ -10,8 +10,8 @@ def genFound(prefix, user, dirname)
   # Generate the index file
   header_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "header.erb"), 'r').read).result(binding)
   footer_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "footer.erb"), 'r').read).result(binding)
-  index_template = File.open(File.join(File.dirname(__FILE__), "templates", "found.erb"), 'r').read
+  index_template = File.open(File.join(File.dirname(__FILE__), "templates", "logged.erb"), 'r').read
   erb = ERB.new(index_template)
-  File.open(File.join(path, "found.html"), "w") { |file|
+  File.open(File.join(path, "logged.html"), "w") { |file|
     file.write(erb.result(binding))}
 end
