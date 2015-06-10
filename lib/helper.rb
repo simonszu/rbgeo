@@ -17,3 +17,11 @@ def years_between(start_year, end_year)
   end
   years
 end
+
+def has_logs(day)
+  if Cache.where("logdate = ? AND (logtype = ? OR logtype = ? OR logtype = ?)", day.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length > 0
+    return true
+  else
+    return false
+  end
+end
