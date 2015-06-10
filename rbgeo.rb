@@ -27,6 +27,9 @@ gc_passwd = config['credentials']['password']
 
 path = config['generate']['path']
 
+home_lat = config['homekoords']['lat']
+home_lon = config['homekoords']['lon']
+
 # Connect and initialize db
 init_db
 

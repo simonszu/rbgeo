@@ -7,5 +7,5 @@ generate:
   path: path/to/output/directory
 
 homekoords:
-  lat: 51 00.000
-  lon: 7 00.000
+  lat: N 51 00.000
+  lon: E 7 00.000
