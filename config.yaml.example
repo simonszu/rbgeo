@@ -1,7 +1,11 @@
 ---
 credentials:
-  username: 
-  password:
+  username: mygeocachingusername
+  password: mygeocachingpassword
 
 generate:
-  path:
+  path: path/to/output/directory
+
+homekoords:
+  lat: 51 00.000
+  lon: 7 00.000
