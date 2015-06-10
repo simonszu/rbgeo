@@ -105,39 +105,55 @@ years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).
 end
 maxyearstring = maxyear.strftime('%Y')
 
-# Calculating longest time period with min 1 find per day
+# Calculating longest time period with min 1 find per day and 0 finds per day
 longestfindstreak = 0
-rangeoflongestfindstreak = ""
+rangeoflongestfindstreak = Array.new
+longesthole = 0
+rangeoflongesthole = Array.new
 days.each do |day|
+
+  puts "Check #{day.strftime('%d.%m.%Y')}"
+
   # Specifies some variables for the inner loop
   thisday = day
   thisstreak = 0
-  thisrange = Array.new
-  # If there is no cache on this day, skip to the next day
-  if (Cache.where("logdate = ?", thisday.to_time.to_i).length == 0)
-    next
-  end
+  thisstreakrange = Array.new
+  thishole = 0
+  thisholerange = Array.new
 
-  # Measure the range. Add days to the range until the next day has no caches any more
+  # Measure the range. Add days to the range until the next day has no caches any more or is outside of the range
   loop do
     thisstreak = thisstreak+1
-    thisrange.push(thisday)
+    thisstreakrange.push(thisday)
     thisday = thisday.next_day
-    break if (Cache.where("logdate = ?", thisday.to_time.to_i).length == 0)
+    break if (Cache.where("logdate = ? AND (logtype = ? OR logtype = ? OR logtype = ?)", thisday.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length == 0) || (!days.include? thisday)
   end
 
-  # Store the maximum range
+  # Store the maximum streak range
   if thisstreak > longestfindstreak
     longestfindstreak = thisstreak
-    rangeoflongestfindstreak = thisrange
+    rangeoflongestfindstreak = thisstreakrange
+  end
+
+  thisday = day
+  loop do
+    thishole = thishole+1
+    thisholerange.push(thisday)
+    thisday = thisday.next_day
+    break if (Cache.where("logdate = ? AND (logtype = ? OR logtype = ? OR logtype = ?)", thisday.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length > 0) || (!days.include? thisday)
+  end
+
+  # Store the maximum hole range
+  if thishole > longesthole
+    longesthole = thishole
+    rangeoflongesthole = thisholerange
   end
 end
 rangeoflongestfindstreakstring = rangeoflongestfindstreak.first.strftime('%d.%m.%Y')+"-"+rangeoflongestfindstreak.last.strftime('%d.%m.%Y')
-
-
+rangeoflongestholestring = rangeoflongesthole.first.strftime('%d.%m.%Y')+"-"+rangeoflongesthole.last.strftime('%d.%m.%Y')
 %>
 <li><%= maxday %></li>
-<li>Gesamtzahl aller Funde: <strong><%= foundcount %></strong> Finds.</li>
+<li>Gesamtzahl aller Funde (ohne Lab-Caches): <strong><%= foundcount %></strong> Finds.</li>
 <li>Gesamtzahl aller Nichtfunde: <strong><%= dnfcount %></strong> DNFs.</li>
 <li>Gesamtzahl aller Cache-Tage: <strong><%= cachedays %></strong> Tage von <strong><%= alldays %></strong> Gesamttagen (<%= cachedays_percent %>%).</li>
 <li>Globaler Durchschnitt: <strong><%= foundspercacheday %></strong> Funde/Cache-Tag, <strong><%= foundsperday %></strong> Funde/Tag, <strong><%= foundsperweek %></strong> Funde/Woche, <strong><%= foundspermonth %></strong> Funde/Monat.</li>
@@ -149,4 +165,5 @@ rangeoflongestfindstreakstring = rangeoflongestfindstreak.first.strftime('%d.%m.
 <li>Woche mit den meisten Funden: <%= maxweekstring %> (<strong><%= mostfoundperweek %></strong> Funde).</li>
 <li>Monat mit den meisten Funden: <%= maxmonthstring %> (<strong><%= mostfoundpermonth %></strong> Funde).</li>
 <li>Jahr mit den meisten Funden: <%= maxyearstring %> (<strong><%= mostfoundperyear %></strong> Funde).</li>
-<li>Längster Zeitraum mit mindestens 1 Fund/Tag: <%= rangeoflongestfindstreakstring %> (<strong><%= longestfindstreak %></strong> Tage).</li>
+<li>Längste Periode mit mindestens 1 Fund/Tag: <%= rangeoflongestfindstreakstring %> (<strong><%= longestfindstreak %></strong> Tage).</li>
+<li>Längste Periode ohne Fund: <%= rangeoflongestholestring %> (<strong><%= longesthole %></strong> Tage).</li>
