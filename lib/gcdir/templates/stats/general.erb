@@ -132,18 +132,19 @@ end
 maxyearstring = maxyear.strftime('%Y')
 
 %>
-<li><%= maxday %></li>
-<li>Gesamtzahl aller Funde (ohne Lab-Caches): <strong><%= foundcount %></strong> Finds.</li>
-<li>Gesamtzahl aller Nichtfunde: <strong><%= dnfcount %></strong> DNFs.</li>
-<li>Gesamtzahl aller Cache-Tage: <strong><%= cachedays %></strong> Tage von <strong><%= alldays %></strong> Gesamttagen (<%= cachedays_percent %>%).</li>
-<li>Globaler Durchschnitt: <strong><%= foundspercacheday %></strong> Funde/Cache-Tag, <strong><%= foundsperday %></strong> Funde/Tag, <strong><%= foundsperweek %></strong> Funde/Woche, <strong><%= foundspermonth %></strong> Funde/Monat.</li>
-<li>Funde in den letzten 365 Tagen: <strong><%= cachesinlastyear %></strong> Funde.
-<li>Cache-Tage in den letzten 365 Tagen: <strong><%= cachedaysinlastyear %></strong> Tage.</li>
-<li>Durchschnitt über die letzten 365 Tage: <strong><%= foundspercachedayinlastyear %></strong> Funde/Cache-Tag, <strong><%= foundsperdayinlastyear %></strong> Funde/Tag, <strong><%= foundsperweekinlastyear %></strong> Funde/Woche, <strong><%= foundspermonthinlastyear %></strong> Funde/Monat. </li>
-<li>Tag mit den meisten Funden: <%= maxdaystring %> (<strong><%= mostfoundperday %></strong> Funde).</li>
-<li>Wochenende mit den meisten Funden: <%= maxweekendstring %> (<strong><%= mostfoundperweekend %></strong> Funde).</li>
-<li>Woche mit den meisten Funden: <%= maxweekstring %> (<strong><%= mostfoundperweek %></strong> Funde).</li>
-<li>Monat mit den meisten Funden: <%= maxmonthstring %> (<strong><%= mostfoundpermonth %></strong> Funde).</li>
-<li>Jahr mit den meisten Funden: <%= maxyearstring %> (<strong><%= mostfoundperyear %></strong> Funde).</li>
-<li>Längste Periode mit mindestens 1 Fund/Tag: <%= longeststreakstring %> (<strong><%= longeststreakarray.length %></strong> Tage).</li>
-<li>Längste Periode ohne Fund: <%= longestholestring %> (<strong><%= longestholearray.length %></strong> Tage).</li>
+<table class="table">
+<tr><td>Gesamtzahl aller Funde (ohne Lab-Caches):</td><td><strong><%= foundcount %></strong> Finds.</td></tr>
+<tr><td>Gesamtzahl aller Nichtfunde:</td><td><strong><%= dnfcount %></strong> DNFs.</td></tr>
+<tr><td>Gesamtzahl aller Cache-Tage:</td><td><strong><%= cachedays %></strong> Tage von <strong><%= alldays %></strong> Gesamttagen (<%= cachedays_percent %>%).</td></tr>
+<tr><td>Globaler Durchschnitt:</td><td><strong><%= foundspercacheday %></strong> Funde/Cache-Tag, <strong><%= foundsperday %></strong> Funde/Tag, <strong><%= foundsperweek %></strong> Funde/Woche, <strong><%= foundspermonth %></strong> Funde/Monat.</td></tr>
+<tr><td>Funde in den letzten 365 Tagen:</td><td><strong><%= cachesinlastyear %></strong> Funde.</td></tr>
+<tr><td>Cache-Tage in den letzten 365 Tagen:</td><td><strong><%= cachedaysinlastyear %></strong> Tage.</td></tr>
+<tr><td>Durchschnitt über die letzten 365 Tage:</td><td><strong><%= foundspercachedayinlastyear %></strong> Funde/Cache-Tag, <strong><%= foundsperdayinlastyear %></strong> Funde/Tag, <strong><%= foundsperweekinlastyear %></strong> Funde/Woche, <strong><%= foundspermonthinlastyear %></strong> Funde/Monat.</td></tr>
+<tr><td>Tag mit den meisten Funden:</td><td><%= maxdaystring %> (<strong><%= mostfoundperday %></strong> Funde).</td></tr>
+<tr><td>Wochenende mit den meisten Funden:</td><td><%= maxweekendstring %> (<strong><%= mostfoundperweekend %></strong> Funde).</td></tr>
+<tr><td>Woche mit den meisten Funden:</td><td><%= maxweekstring %> (<strong><%= mostfoundperweek %></strong> Funde).</td></tr>
+<tr><td>Monat mit den meisten Funden:</td><td><%= maxmonthstring %> (<strong><%= mostfoundpermonth %></strong> Funde).</td></tr>
+<tr><td>Jahr mit den meisten Funden:</td><td><%= maxyearstring %> (<strong><%= mostfoundperyear %></strong> Funde).</td></tr>
+<tr><td>Längste Periode mit mindestens 1 Fund/Tag:</td><td><%= longeststreakstring %> (<strong><%= longeststreakarray.length %></strong> Tage).</td></tr>
+<tr><td>Längste Periode ohne Fund:</td><td><%= longestholestring %> (<strong><%= longestholearray.length %></strong> Tage).</td></tr>
+</table>
