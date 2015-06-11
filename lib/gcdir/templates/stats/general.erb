@@ -131,6 +131,7 @@ years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).
 end
 maxyearstring = maxyear.strftime('%Y')
 
+# Calculate nearest and farthest cache
 home_coords = [simplify_coords(home_lat), simplify_coords(home_lon)]
 mindistance = 999999999999999999999
 nearest_cachename = ""
@@ -148,9 +149,6 @@ Cache.where("logtype = ? OR logtype = ? OR logtype = ?", "Found it", "Attended",
     farthest_cachename = cache.name
   end
 end
-
-
-# Calculate nearest and farthest cache
 
 %>
 <table class="table">
