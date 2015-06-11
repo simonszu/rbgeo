@@ -134,7 +134,17 @@ mindistance = 999999999999999999999
 nearest_cachename = ""
 maxdistance = 0
 farthest_cachename = ""
+farthest_north = 0
+farthest_north_ID = ""
+farthest_south = 90
+farthest_south_ID = ""
+farthest_east = 0
+farthest_east_ID = ""
+farthest_west = 180
+farthest_west_ID = ""
 Cache.where("found = ?", 1).each do |cache|
+  cache_coords_lat = simplify_coords(cache.coords_lat)
+  cache_coords_lon = simplify_coords(cache.coords_lon)
   cache_coords = [simplify_coords(cache.coords_lat), simplify_coords(cache.coords_lon)]
   distance = coord_distance(home_coords, cache_coords)
   if distance < mindistance
@@ -145,7 +155,32 @@ Cache.where("found = ?", 1).each do |cache|
     maxdistance = distance.round(2)
     farthest_cachename = cache.name
   end
+  if cache_coords_lat > farthest_north
+    farthest_north = cache_coords_lat
+    farthest_north_ID = cache.gcid
+  end
+  if cache_coords_lon > farthest_east
+    farthest_east = cache_coords_lon
+    farthest_east_ID = cache.gcid
+  end
+  if cache_coords_lat < farthest_south
+    farthest_south = cache_coords_lat
+    farthest_south_ID = cache.gcid
+  end
+  if cache_coords_lon < farthest_west
+    farthest_west = cache_coords_lon
+    farthest_west_ID = cache.gcid
+  end
 end
+
+farthest_north_name = Cache.where("gcid = ?", farthest_north_ID).first.name
+farthest_north_coords = Cache.where("gcid = ?", farthest_north_ID).first.coords_lat
+farthest_south_name = Cache.where("gcid = ?", farthest_south_ID).first.name
+farthest_south_coords = Cache.where("gcid = ?", farthest_south_ID).first.coords_lat
+farthest_east_name = Cache.where("gcid = ?", farthest_east_ID).first.name
+farthest_east_coords = Cache.where("gcid = ?", farthest_east_ID).first.coords_lon
+farthest_west_name = Cache.where("gcid = ?", farthest_west_ID).first.name
+farthest_west_coords = Cache.where("gcid = ?", farthest_west_ID).first.coords_lon
 
 %>
 <table class="table">
@@ -165,4 +200,8 @@ end
 <tr><td>Längste Periode ohne Fund:</td><td><%= longestholestring %> (<strong><%= longestholearray.length %></strong> Tage).</td></tr>
 <tr><td>Am nächsten liegender Cache-Fund:</td><td><%= nearest_cachename %> (<% if mindistance > 1000 %><strong><%= (mindistance/1000).round(2) %></strong> Kilometer <% else %><strong><%= mindistance %></strong> Meter <% end %>).</td></tr>
 <tr><td>Am weitesten entfernter Cache-Fund:</td><td><%= farthest_cachename %> (<% if maxdistance > 1000 %><strong><%= (maxdistance/1000).round(2) %></strong> Kilometer <% else %><strong><%= maxdistance %></strong> Meter <% end %>).</td></tr>
+<tr><td>Nördlichster Cache-Fund</td><td><%= farthest_north_name %> (<strong><%= farthest_north_coords %></strong>)</td></tr>
+<tr><td>Südlichster Cache-Fund</td><td><%= farthest_south_name %> (<strong><%= farthest_south_coords %></strong>)</td></tr>
+<tr><td>Östlichster Cache-Fund</td><td><%= farthest_east_name %> (<strong><%= farthest_east_coords %></strong>)</td></tr>
+<tr><td>Westlichster Cache-Fund</td><td><%= farthest_west_name %> (<strong><%= farthest_west_coords %></strong>)</td></tr>
 </table>
