@@ -1,4 +1,7 @@
-<% foundcaches = Cache.where("found = ?", 1) %>
+<%
+	foundcaches = Cache.where("found = ?", 1)
+	milestonecaches = Array.new
+%>
 <h4>Meilensteine</h4>
 <table class="table">
 <tr>
@@ -8,8 +11,15 @@
 	<th>Abstand zum vorherigen Meilenstein in Tagen</th>
 </tr>
 <% foundcaches.each_with_index do |cache, index|
-	if ((index+1) % 50 == 0) || ((index+1) == 1) || (index+1 == foundcaches.length) %>
-<tr><td><%= index+1 %></td><td><%= Time.at(cache.logdate).strftime('%d.%m.%Y') %></td><td><%= cache.name %></td><td>0</td></tr>
-<% end
-   end %>	
+	if ((index+1) % MILESTONE_INTERVAL == 0) || ((index+1) == 1) || (index+1 == foundcaches.length) %>
+<tr>
+	<td><%= index %></td>
+	<td><%= Time.at(cache.logdate).strftime('%d.%m.%Y') %></td>
+	<td><%= cache.name %></td>
+	<td><%= (Time.at(cache.logdate).to_date - Time.at(milestonecaches.last.logdate).to_date).to_i unless milestonecaches.empty? %></td>
+</tr>
+<%
+ 	milestonecaches.push(cache)
+	end
+  end %>
 </table>
