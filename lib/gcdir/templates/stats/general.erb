@@ -132,8 +132,10 @@ maxyearstring = maxyear.strftime('%Y')
 home_coords = [simplify_coords(home_lat), simplify_coords(home_lon)]
 mindistance = 999999999999999999999
 nearest_cachename = ""
+nearest_cache_ID = ""
 maxdistance = 0
 farthest_cachename = ""
+farthest_cache_ID = ""
 farthest_north = 0
 farthest_north_ID = ""
 farthest_south = 90
@@ -150,10 +152,12 @@ Cache.where("found = ?", 1).each do |cache|
   if distance < mindistance
     mindistance = distance.round(2)
     nearest_cachename = cache.name
+    nearest_cache_ID = cache.gcid
   end
   if distance > maxdistance
     maxdistance = distance.round(2)
     farthest_cachename = cache.name
+    farthest_cache_ID = cache.gcid
   end
   if cache_coords_lat > farthest_north
     farthest_north = cache_coords_lat
@@ -182,6 +186,9 @@ farthest_east_coords = Cache.where("gcid = ?", farthest_east_ID).first.coords_lo
 farthest_west_name = Cache.where("gcid = ?", farthest_west_ID).first.name
 farthest_west_coords = Cache.where("gcid = ?", farthest_west_ID).first.coords_lon
 
+oldest_cache = Cache.where("found = ? AND status = ?", 1, "Available").order(:hiddendate).first
+newest_cache = Cache.where("found = ? AND status = ?", 1, "Available").order(:hiddendate).last
+
 %>
 <table class="table">
 <tr><td>Gesamtzahl aller Funde (ohne Lab-Caches):</td><td><strong><%= foundcount %></strong> Finds.</td></tr>
@@ -198,10 +205,12 @@ farthest_west_coords = Cache.where("gcid = ?", farthest_west_ID).first.coords_lo
 <tr><td>Jahr mit den meisten Funden:</td><td><%= maxyearstring %> (<strong><%= mostfoundperyear %></strong> Funde).</td></tr>
 <tr><td>Längste Periode mit mindestens 1 Fund/Tag:</td><td><%= longeststreakstring %> (<strong><%= longeststreakarray.length %></strong> Tage).</td></tr>
 <tr><td>Längste Periode ohne Fund:</td><td><%= longestholestring %> (<strong><%= longestholearray.length %></strong> Tage).</td></tr>
-<tr><td>Am nächsten liegender Cache-Fund:</td><td><%= nearest_cachename %> (<% if mindistance > 1000 %><strong><%= (mindistance/1000).round(2) %></strong> Kilometer <% else %><strong><%= mindistance %></strong> Meter <% end %>).</td></tr>
-<tr><td>Am weitesten entfernter Cache-Fund:</td><td><%= farthest_cachename %> (<% if maxdistance > 1000 %><strong><%= (maxdistance/1000).round(2) %></strong> Kilometer <% else %><strong><%= maxdistance %></strong> Meter <% end %>).</td></tr>
-<tr><td>Nördlichster Cache-Fund</td><td><%= farthest_north_name %> (<strong><%= farthest_north_coords %></strong>)</td></tr>
-<tr><td>Südlichster Cache-Fund</td><td><%= farthest_south_name %> (<strong><%= farthest_south_coords %></strong>)</td></tr>
-<tr><td>Östlichster Cache-Fund</td><td><%= farthest_east_name %> (<strong><%= farthest_east_coords %></strong>)</td></tr>
-<tr><td>Westlichster Cache-Fund</td><td><%= farthest_west_name %> (<strong><%= farthest_west_coords %></strong>)</td></tr>
+<tr><td>Am nächsten liegender Cache-Fund:</td><td><a href="details/<%= nearest_cache_ID %>.html"><%= nearest_cachename %></a> (<% if mindistance > 1000 %><strong><%= (mindistance/1000).round(2) %></strong> Kilometer <% else %><strong><%= mindistance %></strong> Meter <% end %>).</td></tr>
+<tr><td>Am weitesten entfernter Cache-Fund:</td><td><a href="details/<%= farthest_cache_ID %>.html"><%= farthest_cachename %></a> (<% if maxdistance > 1000 %><strong><%= (maxdistance/1000).round(2) %></strong> Kilometer <% else %><strong><%= maxdistance %></strong> Meter <% end %>).</td></tr>
+<tr><td>Nördlichster Cache-Fund:</td><td><a href="details/<%= farthest_north_ID %>.html"><%= farthest_north_name %></a> (<strong><%= farthest_north_coords %></strong>)</td></tr>
+<tr><td>Südlichster Cache-Fund:</td><td><a href="details/<%= farthest_south_ID %>.html"><%= farthest_south_name %></a> (<strong><%= farthest_south_coords %></strong>)</td></tr>
+<tr><td>Östlichster Cache-Fund:</td><td><a href="details/<%= farthest_east_ID %>.html"><%= farthest_east_name %></a> (<strong><%= farthest_east_coords %></strong>)</td></tr>
+<tr><td>Westlichster Cache-Fund:</td><td><a href="details/<%= farthest_west_ID %>.html"><%= farthest_west_name %></a> (<strong><%= farthest_west_coords %></strong>)</td></tr>
+<tr><td>Ältester noch aktiver Cache:</td><td><a href="details/<%= oldest_cache.gcid %>.html"><%= oldest_cache.name %></a> (Versteckt am <strong><%= Time.at(oldest_cache.hiddendate).strftime('%d.%m.%Y') %></strong>)</td></tr>
+<tr><td>Neuester noch aktiver Cache:</td><td><a href="details/<%= newest_cache.gcid %>.html"><%= newest_cache.name %></a> (Versteckt am <strong><%= Time.at(newest_cache.hiddendate).strftime('%d.%m.%Y') %></strong>)</td></tr>
 </table>
