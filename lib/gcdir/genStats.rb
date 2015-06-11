@@ -18,6 +18,9 @@ def genStats(prefix, user, dir)
   print "General statistics..."
   general_stats = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "general.erb"), 'r').read).result(binding)
 
+  print "Milestones..."
+  milestones = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "milestones.erb"), 'r').read).result(binding)
+
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
   erb = ERB.new(stats_template)
   File.open(File.join(path, "stats.html"), "w") { |file|

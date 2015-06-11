@@ -190,6 +190,7 @@ oldest_cache = Cache.where("found = ? AND status = ?", 1, "Available").order(:hi
 newest_cache = Cache.where("found = ? AND status = ?", 1, "Available").order(:hiddendate).last
 
 %>
+<h4>Allgemeine Fundstatistik</h4>
 <table class="table">
 <tr><td>Gesamtzahl aller Funde (ohne Lab-Caches):</td><td><strong><%= foundcount %></strong> Finds.</td></tr>
 <tr><td>Gesamtzahl aller Nichtfunde:</td><td><strong><%= dnfcount %></strong> DNFs.</td></tr>
