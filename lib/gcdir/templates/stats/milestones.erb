@@ -13,9 +13,9 @@
 <% foundcaches.each_with_index do |cache, index|
 	if ((index+1) % MILESTONE_INTERVAL == 0) || ((index+1) == 1) || (index+1 == foundcaches.length) %>
 <tr>
-	<td><%= index %></td>
+	<td><%= index+1 %></td>
 	<td><%= Time.at(cache.logdate).strftime('%d.%m.%Y') %></td>
-	<td><%= cache.name %></td>
+	<td><a href="details/<%= cache.gcid %>.html"><%= cache.name %></a></td>
 	<td><%= (Time.at(cache.logdate).to_date - Time.at(milestonecaches.last.logdate).to_date).to_i unless milestonecaches.empty? %></td>
 </tr>
 <%
