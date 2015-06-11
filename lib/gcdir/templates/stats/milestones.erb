@@ -7,6 +7,9 @@
 	<th>Cache</th>
 	<th>Abstand zum vorherigen Meilenstein in Tagen</th>
 </tr>
-<tr><td><%= foundcaches.first.id %></td><td>9.9.99</td><td><%= foundcaches.first.name %></td><td>0</td></tr>
-<tr><td><%= foundcaches.last.id %></td><td>9.9.99</td><td><%= foundcaches.last.name %></td><td>0</td></tr>
+<% foundcaches.each_with_index do |cache, index|
+	if ((index+1) % 50 == 0) || ((index+1) == 1) || (index+1 == foundcaches.length) %>
+<tr><td><%= index+1 %></td><td><%= Time.at(cache.logdate).strftime('%d.%m.%Y') %></td><td><%= cache.name %></td><td>0</td></tr>
+<% end
+   end %>	
 </table>
