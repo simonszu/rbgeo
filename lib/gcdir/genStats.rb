@@ -21,7 +21,7 @@ def genStats(prefix, user, dir)
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
   erb = ERB.new(stats_template)
   File.open(File.join(path, "stats.html"), "w") { |file|
-    file.write(erb.result(binding))} put
+    file.write(erb.result(binding))}
 
   print "OK\n"
 end

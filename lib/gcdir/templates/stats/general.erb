@@ -3,7 +3,7 @@ cachedays = Cache.select(:logdate).distinct.length
 dateoffirstcache = Time.at(Cache.first.logdate).to_date
 alldays = (Date.parse(Time.now.strftime('%Y/%m/%d')) - dateoffirstcache).to_i
 cachedays_percent = ((cachedays.to_f/alldays.to_f)*100).round(2)
-foundcount = Cache.where("logtype = ? OR logtype = ? OR logtype = ?", "Found it", "Attended", "Webcam Photo Taken").length
+foundcount = Cache.where("found = 1").length
 dnfcount = Cache.where(:logtype => "Didn't find it").length
 foundspercacheday = (foundcount.to_f/cachedays.to_f).round(2)
 foundsperday = (foundcount.to_f/alldays.to_f).round(2)
@@ -14,10 +14,7 @@ foundspermonth = (foundcount.to_f/months.to_f).round(2)
 
 midnight = DateTime.new(DateTime.now.year, DateTime.now.month, DateTime.now.day).to_i
 lastyear = (midnight - 31556926).to_i
-foundsinlastyear = Cache.where("logdate >= ? AND logtype = ?", lastyear, "Found it").length
-attendedinlastyear = Cache.where("logdate >= ? AND logtype = ?", lastyear, "Attended").length
-webcamsinlastyear  = Cache.where("logdate >= ? AND logtype = ?", lastyear, "Webcam Photo Taken").length
-cachesinlastyear = foundsinlastyear + webcamsinlastyear + attendedinlastyear
+cachesinlastyear = Cache.where("logdate >= ? AND found = ?", lastyear, 1).length
 
 cachedaysinlastyear = Cache.select(:logdate).where("logdate >= ?", lastyear).distinct.length
 foundspercachedayinlastyear = (cachesinlastyear.to_f/cachedaysinlastyear.to_f).round(2)
@@ -61,7 +58,7 @@ days.each_with_index do |day, index|
   end
 
   # Calculate the days with the most finds
-  foundsinthisday = Cache.where("logdate = ? AND (logtype = ? OR logtype = ? OR logtype = ?)", day.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length
+  foundsinthisday = Cache.where("logdate = ? AND found = ?", day.to_time.to_i, 1).length
   if foundsinthisday > mostfoundperday
     mostfoundperday = foundsinthisday
     maxday = day
@@ -89,7 +86,7 @@ longestholestring = longestholearray.first.strftime('%d.%m.%Y')+"-"+longestholea
 
 # Calculate the weekend with the most finds
 weekends.each do |weekend|
-  foundsinthisweekend = Cache.where("(logdate = ? OR logdate = ?) AND (logtype = ? OR logtype = ? OR logtype = ?)", weekend[0].to_time.to_i, weekend[1].to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length
+  foundsinthisweekend = Cache.where("(logdate = ? OR logdate = ?) AND found = ?", weekend[0].to_time.to_i, weekend[1].to_time.to_i, 1).length
   if foundsinthisweekend > mostfoundperweekend
     mostfoundperweekend = foundsinthisweekend
     maxweekend = weekend
@@ -99,7 +96,7 @@ maxweekendstring = maxweekend[1].strftime('%d.%m.%Y')+"/"+maxweekend[0].strftime
 
 # Calculate the week with the most finds
 weeks.each do |week|
-  foundsinthisweek = Cache.where("logdate <= ? AND logdate >= ?  AND (logtype = ? OR logtype = ? OR logtype = ?)", week[0], week[1], "Found it", "Attended", "Webcam Photo Taken").length
+  foundsinthisweek = Cache.where("logdate <= ? AND logdate >= ?  AND found = ?", week[0], week[1], 1).length
   if foundsinthisweek > mostfoundperweek
     mostfoundperweek = foundsinthisweek
     maxweek = week
@@ -111,7 +108,7 @@ maxweekstring = Time.at(maxweek[1]).strftime('%d.%m.%Y')+"-"+Time.at(maxweek[0])
 months_between(Date.new(dateoffirstcache.year, dateoffirstcache.month), Date.new(Time.now.to_date.year, Time.now.to_date.month)).each do |month|
   startday = month
   endday = month.next_month.prev_day
-  foundsinthismonth = Cache.where("logdate <= ? AND logdate >= ?  AND (logtype = ? OR logtype = ? OR logtype = ?)", endday.to_time.to_i, startday.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length
+  foundsinthismonth = Cache.where("logdate <= ? AND logdate >= ?  AND found = ?", endday.to_time.to_i, startday.to_time.to_i, 1).length
   if foundsinthismonth > mostfoundpermonth
     mostfoundpermonth = foundsinthismonth
     maxmonth = month
@@ -123,7 +120,7 @@ maxmonthstring = maxmonth.strftime('%m.%Y')
 years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).each do |year|
   startday = year
   endday = year.next_year.prev_day
-  foundsinthisyear = Cache.where("logdate <= ? AND logdate >= ?  AND (logtype = ? OR logtype = ? OR logtype = ?)", endday.to_time.to_i, startday.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length
+  foundsinthisyear = Cache.where("logdate <= ? AND logdate >= ?  AND found = ?", endday.to_time.to_i, startday.to_time.to_i, 1).length
   if foundsinthisyear > mostfoundperyear
     mostfoundperyear = foundsinthisyear
     maxyear = year
@@ -137,7 +134,7 @@ mindistance = 999999999999999999999
 nearest_cachename = ""
 maxdistance = 0
 farthest_cachename = ""
-Cache.where("logtype = ? OR logtype = ? OR logtype = ?", "Found it", "Attended", "Webcam Photo Taken").each do |cache|
+Cache.where("found = ?", 1).each do |cache|
   cache_coords = [simplify_coords(cache.coords_lat), simplify_coords(cache.coords_lon)]
   distance = coord_distance(home_coords, cache_coords)
   if distance < mindistance

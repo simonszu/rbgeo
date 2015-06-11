@@ -154,7 +154,21 @@ def parse_founds_gc()
         cache.logtype = logtype
         cache.logdate = logdate
         cache.log = log
+
+        # Set extra flags for found and dnf
+        if FOUND_LOGTYPES.include? logtype
+          cache.found = 1
+          cache.dnf = 0
+        elsif logtype.eql? "Didn't find it"
+          cache.found = 0
+          cache.dnf = 1
+        else
+          cache.found = 0
+          cache.dnf = 0
+        end
+
       end
+
 
       # Update every other attribute and save the record
       cache.gcid = gcid

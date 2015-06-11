@@ -16,4 +16,6 @@ CACHETYPES = ["Multi-cache", "Traditional Cache", "Event Cache", "Unknown Cache"
 
 FINAL_LOGTYPES = ['Found it', 'Attended', 'Archive', 'Webcam Photo Taken']
 
+FOUND_LOGTYPES = ['Found it', 'Attended', 'Webcam Photo Taken']
+
 MAX_SLEEPTIME = 5

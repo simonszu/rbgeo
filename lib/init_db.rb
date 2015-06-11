@@ -40,6 +40,8 @@ def init_db ()
         table.column :favcount, :integer
         table.column :guid, :string
         table.column :logtype, :string
+        table.column :found, :integer
+        table.column :dnf, :integer
         table.column :logdate, :integer
         table.column :favorite, :integer
         table.column :log, :text
