@@ -1,0 +1,40 @@
+<%
+matrix = Array.new(10) {Array.new(10)}
+
+# i is the difficulty in rows
+# j is the terrain in columns
+
+for i in 0..matrix.length-1
+  for j in 0..matrix[0].length-1
+    matrix[i][j] = 0
+  end
+end
+
+Cache.all.each do |cache|
+  i = (cache.difficulty*2).to_i
+  j = (cache.terrain*2).to_i
+  matrix[i-1][j-1] += 1
+end
+%>
+
+<h4>D/T-Matrix</h4>
+<table class="table table-bordered table-condensed">
+  <tr><td></td><td colspan="11" align="center"><strong>Terrain</strong></td></tr>
+  <tr>
+    <td rowspan="11" style="vertical-align:middle"><strong>Difficulty</strong></td><% for j in 0..matrix[0].length-1 %><td><strong><%= ((j+1).to_f/2).round(1)  unless ((j+1).to_f/2).round(1) == 0.5%></strong></td><% end %>
+    <td><strong>Gesamt</strong></td>
+  </tr>
+  <% for i in 1..matrix.length-1 %>
+  <tr>
+    <td><strong><%= ((i+1).to_f/2).round(1) unless ((i+1).to_f/2).round(1) == 0.5%></strong></td>
+    <% for j in 1..matrix[0].length-1 %><td><%= matrix[i][j] %></td><% end %>
+    <td><%= matrix[i].reduce(:+) %></td>
+  </tr><% end %>
+  <tr>
+    <td><strong>Gesamt</strong></td>
+    <% newmatr = matrix.transpose
+    for i in 1..newmatr[0].length-1 %>
+    <td><%= newmatr[i].reduce(:+) %></td>
+    <% end %>
+  </tr>
+</table>

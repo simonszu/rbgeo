@@ -6,7 +6,6 @@ def genIndex(prefix, user, dirname)
   name = user
   path_prefix = prefix
   path = dirname
-  caches = Cache.all
 
   # Generate the index file
   header_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "header.erb"), 'r').read).result(binding)
