@@ -191,7 +191,7 @@ newest_cache = Cache.where("found = ? AND status = ?", 1, "Available").order(:hi
 
 %>
 <h4>Allgemeine Fundstatistik</h4>
-<table class="table">
+<table class="table table-condensed">
 <tr><td>Gesamtzahl aller Funde (ohne Lab-Caches):</td><td><strong><%= foundcount %></strong> Finds.</td></tr>
 <tr><td>Gesamtzahl aller Nichtfunde:</td><td><strong><%= dnfcount %></strong> DNFs.</td></tr>
 <tr><td>Gesamtzahl aller Cache-Tage:</td><td><strong><%= cachedays %></strong> Tage von <strong><%= alldays %></strong> Gesamttagen (<%= cachedays_percent %>%).</td></tr>

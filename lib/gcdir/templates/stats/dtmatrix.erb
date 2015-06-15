@@ -4,20 +4,48 @@ matrix = Array.new(10) {Array.new(10)}
 # i is the difficulty in rows
 # j is the terrain in columns
 
+# Init the matrix
 for i in 0..matrix.length-1
   for j in 0..matrix[0].length-1
     matrix[i][j] = 0
   end
 end
 
+# Fill the matrix
 Cache.all.each do |cache|
   i = (cache.difficulty*2).to_i
   j = (cache.terrain*2).to_i
   matrix[i-1][j-1] += 1
 end
 
+# Calculate hard caches
 hardcaches = Cache.where("difficulty >= ? OR terrain >= ?", 3, 3).length
 allcaches = Cache.all.length
+
+# Calculate the sums
+gesamtdifficulty = Array.new
+gesamtterrain = Array.new
+for i in 0..matrix.length-1
+  gesamtdifficulty.push(matrix[i].reduce(:+))
+end
+newmatrix = matrix.transpose
+for i in 0..newmatrix.length-1
+  gesamtterrain.push(newmatrix[i].reduce(:+))
+end
+
+# Calculate the medians
+terrainmedian = 0
+difficultymedian = 0
+for i in 0..(gesamtterrain.length-1)
+  terrainmedian += (((i+1)/2)*gesamtterrain[i]).to_i
+end
+
+for i in 0..(gesamtdifficulty.length-1)
+  difficultymedian += (((i+1)/2)*gesamtdifficulty[i]).to_i
+end
+
+terrainmedian = (terrainmedian.to_f/allcaches.to_f).round(2)
+difficultymedian = (difficultymedian.to_f/allcaches.to_f).round(2)
 %>
 
 <h4>D/T-Matrix</h4>
@@ -31,15 +59,15 @@ allcaches = Cache.all.length
   <tr>
     <td><strong><%= ((i+1).to_f/2).round(1) unless ((i+1).to_f/2).round(1) == 0.5%></strong></td>
     <% for j in 1..matrix[0].length-1 %><td><%= matrix[i][j] %></td><% end %>
-    <td><%= matrix[i].reduce(:+) %></td>
+    <td><%= gesamtdifficulty[i] %></td>
   </tr><% end %>
   <tr>
     <td><strong>Gesamt</strong></td>
-    <% newmatr = matrix.transpose
-    for i in 1..newmatr[0].length-1 %>
-    <td><%= newmatr[i].reduce(:+) %></td>
+    <% for i in 1..gesamtterrain.length-1 %>
+    <td><%= gesamtterrain[i] %></td>
     <% end %>
   </tr>
 </table>
-<%= matrix.flatten.select{|item| item > 0}.length %> von 81 möglichen D/T-Kombinationen gefunden.
-<%= hardcaches %> (<%= ((hardcaches.to_f/allcaches.to_f)*100).round(1) %>%) Funde mit Difficulty oder Terrain >= 3.
+<%= matrix.flatten.select{|item| item > 0}.length %> von 81 möglichen D/T-Kombinationen gefunden,
+<%= hardcaches %> (<%= ((hardcaches.to_f/allcaches.to_f)*100).round(1) %>%) Funde mit Difficulty oder Terrain >= 3,
+Arithmetisches Mittel der D/T-Werte: <%= difficultymedian %>/<%= terrainmedian %>.
