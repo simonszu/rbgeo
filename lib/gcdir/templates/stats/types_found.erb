@@ -1,0 +1,29 @@
+<%
+def typestats(type)
+	allcachecount = Cache.all.length
+	thiscount = Cache.where(cachetype: type).length
+	thispercent = ((thiscount.to_f/allcachecount.to_f)*100).round(1)
+	return [thiscount, thispercent]
+end
+%>
+<h4>Gefundene Cachetypen</h4>
+<table class="table table-condensed">
+<tr>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/2.gif" title="Traditional Cache"> <%= typestats("Traditional Cache")[0] %> (<%= typestats("Traditional Cache")[1] %>%)</td>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/3.gif" title="Multi-cache"> <%= typestats("Multi-cache")[0] %> (<%= typestats("Multi-cache")[1] %>%)</td></td>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/8.gif" title="Unknown Cache"> <%= typestats("Unknown Cache")[0] %> (<%= typestats("Unknown Cache")[1] %>%)</td></td>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/6.gif" title="Event Cache"> <%= typestats("Event Cache")[0] %> (<%= typestats("Event Cache")[1] %>%)</td></td>
+</tr>
+<tr>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/11.gif" title="Webcam Cache"> <%= typestats("Webcam Cache")[0] %> (<%= typestats("Webcam Cache")[1] %>%)</td></td>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/earthcache.gif" title="Earthcache"> <%= typestats("Earthcache")[0] %> (<%= typestats("Earthcache")[1] %>%)</td></td>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/453.gif" title="Mega-Event Cache"> <%= typestats("Mega-Event Cache")[0] %> (<%= typestats("Mega-Event Cache")[1] %>%)</td></td>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/1858.gif" title="Wherigo Cache"> <%= typestats("Wherigo Cache")[0] %> (<%= typestats("Wherigo Cache")[1] %>%)</td></td>
+</tr>
+<tr>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/7005.gif" title="Giga-Event Cache"> <%= typestats("Giga-Event Cache")[0] %> (<%= typestats("Giga-Event Cache")[1] %>%)</td></td>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/3653.gif" title="Lost and Found Event Cache"> <%= typestats("Lost and Found Event Cache")[0] %> (<%= typestats("Lost and Found Event Cache")[1] %>%)</td></td>
+	<td><img src="http://www.geocaching.com/images/wpttypes/sm/5.gif" title="Letterbox Hybrid"> <%= typestats("Letterbox Hybrid")[0] %> (<%= typestats("Letterbox Hybrid")[1] %>%)</td></td>
+	<td></td>
+</tr>
+</table>
