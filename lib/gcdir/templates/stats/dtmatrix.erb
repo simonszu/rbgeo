@@ -15,6 +15,9 @@ Cache.all.each do |cache|
   j = (cache.terrain*2).to_i
   matrix[i-1][j-1] += 1
 end
+
+hardcaches = Cache.where("difficulty >= ? OR terrain >= ?", 3, 3).length
+allcaches = Cache.all.length
 %>
 
 <h4>D/T-Matrix</h4>
@@ -38,3 +41,5 @@ end
     <% end %>
   </tr>
 </table>
+<%= matrix.flatten.select{|item| item > 0}.length %> von 81 möglichen D/T-Kombinationen gefunden.
+<%= hardcaches %> (<%= ((hardcaches.to_f/allcaches.to_f)*100).round(1) %>%) Funde mit Difficulty oder Terrain >= 3.
