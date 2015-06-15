@@ -2,7 +2,7 @@
 
 # coding: utf-8
 
-def parse_founds_gc()
+def parse_logs_gc()
 
   gc_user = $config['credentials']['username']
   gc_passwd = $config['credentials']['password']
@@ -25,7 +25,7 @@ def parse_founds_gc()
   puts "Loading caches which are updated or not in the DB at all..."
 
   # List my founds
-  a.get(MY_PAGE).search("table.Table tr").reverse_each do |cachetable|
+  a.get(MY_LOG_PAGE).search("table.Table tr").reverse_each do |cachetable|
 
     # Get basic details
     favorite = 0
@@ -57,9 +57,11 @@ def parse_founds_gc()
       cachetype = cachetable.css("img")[1]["title"].strip
     end
 
-    # Get the GUID of the cache
+    # Get the are of the cache
     nbsp = Nokogiri::HTML("&nbsp;").text
     area = cachetable.css("td")[4].inner_text.gsub(nbsp, "").strip
+
+    # Get the GUID of the cache
     cachetable.css("a")[0]["href"].match(/http:\/\/www\.geocaching\.com\/seek\/cache_details\.aspx\?guid=(.+)/)
     guid = $1
 

@@ -4,7 +4,8 @@ CONFIG_FILE = 'config.yaml'
 GC_CACHEDB = 'gc-caches.db'
 
 LOGIN_PAGE = 'https://www.geocaching.com/login/'
-MY_PAGE = 'http://www.geocaching.com/my/logs.aspx'
+MY_LOG_PAGE = 'http://www.geocaching.com/my/logs.aspx'
+MY_OWNS_PAGE = 'http://www.geocaching.com/my/owned.aspx'
 
 LOGTYPES = ["Found it", "Didn't find it", "Will attend", "Owner Maintenance", "Needs Maintenance", "Needs Archived", "Archive", "Enable Listing", "Temporarily Disable Listing", "Post Reviewer Note", "Webcam Photo Taken", "Write note", "Attended"]
 

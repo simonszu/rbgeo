@@ -24,6 +24,9 @@ def genStats(prefix, user, dir)
   print "D/T Matrix..."
   dtmatrix = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "dtmatrix.erb"), 'r').read).result(binding)
 
+  print "Found containers..."
+  containers_found = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "containers_found.erb"), 'r').read).result(binding)
+
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
   erb = ERB.new(stats_template)
   File.open(File.join(path, "stats.html"), "w") { |file|

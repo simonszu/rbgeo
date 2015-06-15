@@ -55,24 +55,10 @@ def init_db ()
     unless ActiveRecord::Base.connection.tables.include? 'ownedcaches'
       puts "Initializing database for owned caches..."
       create_table :ownedcaches do |table|
-        table.column :gcid, :string
         table.column :name, :string
-        table.column :owner, :string
-        table.column :cachetype, :string
-        table.column :size, :string
-        table.column :difficulty, :double
-        table.column :terrain, :double
-        table.column :coords_lat, :string
-        table.column :coords_lon, :string
-        table.column :area, :string
-        table.column :hiddendate, :integer
         table.column :status, :string
-        table.column :favcount, :integer
         table.column :guid, :string
-        table.column :logtype, :string
-        table.column :logdate, :integer
-        table.column :favorite, :integer
-        table.column :log, :text
+        table.column :cachetype, :string
       end
       puts "Database initialized!"
     end
