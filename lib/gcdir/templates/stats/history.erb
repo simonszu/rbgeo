@@ -1,0 +1,33 @@
+<h4>Historie</h4>
+<table class="table table-condensed">
+<tr>
+	<th>Jahr</th>
+	<th>Cache-Tage</th>
+	<th>Cache-Tage/Woche</th>
+	<th>Funde</th>
+	<th>Funde/Cache-Tag</th>
+	<th>Funde/Tag</th>
+	<th>Funde/Woche</th>
+	<th>Funde/Monat</th>
+</tr>
+
+<%
+# Calculate all years between the first find and now
+dateoffirstcache = Time.at(Cache.first.logdate).to_date
+years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).each do |year|
+  startday = year
+  endday = year.next_year.prev_day 
+%>
+<tr>
+  <td><%= year.strftime('%Y')%></td>
+  <td>cachedays</td>
+  <td>cachedaysperweek</td>
+  <td>finds</td>
+  <td>findspercacheday</td>
+  <td>findsperday</td>
+  <td>findsperweek</td>
+  <td>findspermonth</td>
+</tr>
+<% end %>
+
+</table>
