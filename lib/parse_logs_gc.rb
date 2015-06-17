@@ -51,10 +51,10 @@ def parse_logs_gc()
 
     # Check if the cache is favorited by the user
     if cachetable.css("img").length == 3
-      cachetype = cachetable.css("img")[2]["title"].strip
+      type = cachetable.css("img")[2]["title"].strip
       favorite = 1
     else
-      cachetype = cachetable.css("img")[1]["title"].strip
+      type = cachetable.css("img")[1]["title"].strip
     end
 
     # Get the are of the cache
@@ -184,7 +184,7 @@ def parse_logs_gc()
       cache.coords_lat = coords_lat
       cache.coords_lon = coords_lon
       cache.favcount = favcount
-      cache.cachetype = cachetype
+      cache.type = type
       cache.area = area
       cache.favorite = favorite
       cache.save

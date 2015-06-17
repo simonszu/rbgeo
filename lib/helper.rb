@@ -107,10 +107,41 @@ def sizeicon(size)
   return str
 end
 
+def logicon(logtype)
+  if logtype.eql? "Found it"
+    str = '<img src="http://www.geocaching.com/images/logtypes/2.png" title="Found it">'
+  elsif logtype.eql? "Will Attend"
+    str = '<img src="http://www.geocaching.com/images/logtypes/9.png" title="Will Attend">'
+  elsif logtype.eql? "Owner Maintenance"
+    str = '<img src="http://www.geocaching.com/images/logtypes/46.png" title="Owner Maintenance">'
+  elsif logtype.eql? "Needs Archived"
+    str = '<img src="http://www.geocaching.com/images/logtypes/7.png" title="Needs Archived">'
+  elsif logtype.eql? "Didn't find it"
+    str = '<img src="http://www.geocaching.com/images/logtypes/3.png" title="Didn\'t find it">'
+  elsif logtype.eql? "Archive"
+    str = '<img src="http://www.geocaching.com/images/logtypes/5.png" title="Archive">'
+  elsif logtype.eql? "Write note"
+    str = '<img src="http://www.geocaching.com/images/logtypes/4.png" title="Write note">'
+  elsif logtype.eql? "Temporarily Disable Listing"
+    str = '<img src="http://www.geocaching.com/images/logtypes/22.png" title="Temporarily Disable Listing">'
+  elsif logtype.eql? "Attended"
+    str = '<img src="http://www.geocaching.com/images/logtypes/10.png" title="Attended">'
+  elsif logtype.eql? "Webcam Photo Taken"
+    str = '<img src="http://www.geocaching.com/images/logtypes/11.png" title="Webcam Photo Taken">'
+  elsif logtype.eql? "Post Reviewer Note"
+    str = '<img src="http://www.geocaching.com/images/logtypes/18.png" title="Post Reviewer Note">'
+  elsif logtype.eql? "Enable Listing"
+    str = '<img src="http://www.geocaching.com/images/logtypes/23.png" title="Enable Listing">'
+  elsif logtype.eql? "Needs Maintenance"
+    str = '<img src="http://www.geocaching.com/images/logtypes/45.png" title="Needs Maintenance">'
+  end
+  return str
+end
+
 # Returns actual number and percent of a cache type
 def typestats(type)
   allcachecount = Cache.where(found: "1").length
-  thiscount = Cache.where(cachetype: type).length
+  thiscount = Cache.where(type: type).length
   thispercent = ((thiscount.to_f/allcachecount.to_f)*100).round(1)
   return [thiscount, thispercent]
 end
