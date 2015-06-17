@@ -2,15 +2,15 @@
 # Stores cachetypes and counts in a hash
 lastindex = 0
 cachehash = Hash.new
-Cache.select(:type).distinct.each do |cache|
-	cachehash[cache.type] = Cache.where(type: cache.type, found: "1").length
+Cache.select(:owner).distinct.each do |cache|
+	cachehash[cache.owner] = Cache.where(owner: cache.owner, found: "1").length
 end
 
 # Sorts the hash descending by counts
 # Unfortunately, sort_by isn't working as mutable function, so the self reference
-cachehash = cachehash.sort_by {|_key, value| value}.reverse.to_h
+cachehash = cachehash.sort_by {|_key, value| value}.reverse[0..MAX_OWNERS-1].to_h
 %>
-<h4>Gefundene Cachetypen</h4>
+<h4>Funde nach Cacheowner (TOP 30)</h4>
 <table class="table table-condensed">
 <% cachehash.each_with_index do |(key, value),index|
 	lastindex = index %>
@@ -18,13 +18,13 @@ cachehash = cachehash.sort_by {|_key, value| value}.reverse.to_h
 	<tr>
 	<% end %>
 	<td>
-	<%= typeicon(key) %> <%= typestats(key)[0] %> (<%= typestats(key)[1] %>%)</td></td>
+	<%= key %></td><td><%= ownerstats(key)[0] %> (<%= ownerstats(key)[1] %>%)</td></td>
 	<% if (index % TABLE_WIDTH == TABLE_WIDTH-1) %>
 	</tr>
 	<% end %>
 <% end %>
 	<% (TABLE_WIDTH-(lastindex % TABLE_WIDTH)).times do |dummy| %>
-		<td></td>
+		<td></td><td></td>
 	<% end %>
 	</tr>
 </table>

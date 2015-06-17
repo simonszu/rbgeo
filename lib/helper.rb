@@ -153,3 +153,11 @@ def sizestats(size)
   thispercent = ((thiscount.to_f/allcachecount.to_f)*100).round(1)
   return [thiscount, thispercent]
 end
+
+# Returns actual number and percent of a cache container size
+def ownerstats(owner)
+  allcachecount = Cache.where(found: "1").length
+  thiscount = Cache.where(owner: owner).length
+  thispercent = ((thiscount.to_f/allcachecount.to_f)*100).round(1)
+  return [thiscount, thispercent]
+end

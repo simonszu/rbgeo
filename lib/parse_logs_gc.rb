@@ -88,6 +88,8 @@ def parse_logs_gc()
         # Get some attributes of the cache
         # First the owner
         owner = detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0].inner_text
+        owner_guid = detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0]["href"]
+        puts owner_guid
         if (owner.eql? gc_user)
           next
         end

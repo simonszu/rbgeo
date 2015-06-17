@@ -3,7 +3,7 @@
 lastindex = 0
 cachehash = Hash.new
 Cache.select(:size).distinct.each do |cache|
-	cachehash[cache.size] = Cache.where(size: cache.size).length
+	cachehash[cache.size] = Cache.where(size: cache.size, found: "1").length
 end
 
 # Sorts the hash descending by counts
