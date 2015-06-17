@@ -19,7 +19,7 @@ FINAL_LOGTYPES = ['Found it', 'Attended', 'Archive', 'Webcam Photo Taken']
 
 FOUND_LOGTYPES = ['Found it', 'Attended', 'Webcam Photo Taken']
 
-MAX_SLEEPTIME = 5
+MAX_SLEEPTIME = 0
 
 MILESTONE_INTERVAL = 50
 

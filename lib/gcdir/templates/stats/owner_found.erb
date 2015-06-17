@@ -13,12 +13,13 @@ cachehash = cachehash.sort_by {|_key, value| value}.reverse[0..MAX_OWNERS-1].to_
 <h4>Funde nach Cacheowner (TOP 30)</h4>
 <table class="table table-condensed">
 <% cachehash.each_with_index do |(key, value),index|
+	ownerid = Cache.where(owner: key).first.owner_guid
 	lastindex = index %>
 	<% if (index == 0) || (index % TABLE_WIDTH == 0) %>
 	<tr>
 	<% end %>
 	<td>
-	<%= key %></td><td><%= ownerstats(key)[0] %> (<%= ownerstats(key)[1] %>%)</td></td>
+	<a href="http://www.geocaching.com/profile/?guid=<%= ownerid %>"><%= key %></a></td><td><%= ownerstats(key)[0] %> (<%= ownerstats(key)[1] %>%)</td></td>
 	<% if (index % TABLE_WIDTH == TABLE_WIDTH-1) %>
 	</tr>
 	<% end %>

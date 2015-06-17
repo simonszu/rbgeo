@@ -88,8 +88,8 @@ def parse_logs_gc()
         # Get some attributes of the cache
         # First the owner
         owner = detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0].inner_text
-        owner_guid = detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0]["href"]
-        puts owner_guid
+        detailpage.search("div[id = 'ctl00_ContentBody_mcd1'] a")[0]["href"].match(/http:\/\/www\.geocaching\.com\/profile\/\?guid=(.+)&wid.+/)
+        owner_guid = $1
         if (owner.eql? gc_user)
           next
         end
@@ -130,14 +130,7 @@ def parse_logs_gc()
 
       # If something goes wrong, use some default values
       rescue
-        owner = "N.N"
-        difficulty = 0
-        terrain = 0
-        size = "-"
-        coords = "-"
-        favcount = 0
-        hiddendate = 0
-        gcid = "NOT_PUBLISHED"
+        puts "Fehler beim Auslesen der Attribute!"
         next
       end
 
@@ -179,6 +172,7 @@ def parse_logs_gc()
       cache.name = name
       cache.status = status
       cache.owner = owner
+      cache.owner_guid = owner_guid
       cache.difficulty = difficulty
       cache.terrain = terrain
       cache.size = size

@@ -28,6 +28,7 @@ def init_db ()
         table.column :gcid, :string
         table.column :name, :string
         table.column :owner, :string
+        table.column :owner_guid, :string
         table.column :type, :string
         table.column :size, :string
         table.column :difficulty, :double
