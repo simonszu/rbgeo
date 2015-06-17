@@ -2,7 +2,7 @@
 <table class="table table-condensed">
 <tr>
 	<th>Jahr</th>
-	<th>Cache-Tage</th>
+	<th colspan="2">Cache-Tage</th>
 	<th>Cache-Tage/Woche</th>
 	<th>Funde</th>
 	<th>Funde/Cache-Tag</th>
@@ -16,17 +16,26 @@
 dateoffirstcache = Time.at(Cache.first.logdate).to_date
 years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).each do |year|
   startday = year
-  endday = year.next_year.prev_day 
+  endday = year.next_year.prev_day
+  cachedays = Cache.where("logdate >= ? AND logdate < ? AND found = ?", startday.to_time.to_i, endday.to_time.to_i, "1").select(:logdate).distinct.length
+  cachedayspercent = ((cachedays.to_f/365.0)*100).round(2)
+  cachedaysperweek = (cachedays.to_f/52.0).round(2)
+  finds = Cache.where("logdate >= ? AND logdate < ? AND found = ?", startday.to_time.to_i, endday.to_time.to_i, "1").length
+  findspercacheday = (finds.to_f/cachedays.to_f).round(2)
+  findsperday = (finds.to_f/365.0).round(2)
+  findsperweek = (finds.to_f/52.0).round(2)
+  findspermonth = (finds.to_f/12.0).round(2)
 %>
 <tr>
   <td><%= year.strftime('%Y')%></td>
-  <td>cachedays</td>
-  <td>cachedaysperweek</td>
-  <td>finds</td>
-  <td>findspercacheday</td>
-  <td>findsperday</td>
-  <td>findsperweek</td>
-  <td>findspermonth</td>
+  <td><%= cachedays %></td>
+  <td>(<%= cachedayspercent %>%)</td>
+  <td><%= cachedaysperweek %></td>
+  <td><%= finds %></td>
+  <td><%= findspercacheday %></td>
+  <td><%= findsperday %></td>
+  <td><%= findsperweek %></td>
+  <td><%= findspermonth %></td>
 </tr>
 <% end %>
 
