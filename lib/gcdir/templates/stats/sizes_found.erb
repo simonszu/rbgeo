@@ -1,16 +1,15 @@
 <%
 # Stores cachetypes and counts in a hash
-lastindex = 0
 cachehash = Hash.new
-Cache.select(:cachetype).distinct.each do |cache|
-	cachehash[cache.cachetype] = Cache.where(cachetype: cache.cachetype).length
+Cache.select(:size).distinct.each do |cache|
+	cachehash[cache.size] = Cache.where(size: cache.size).length
 end
-
+lastindex = 0
 # Sorts the hash descending by counts
 # Unfortunately, sort_by isn't working as mutable function, so the self reference
 cachehash = cachehash.sort_by {|_key, value| value}.reverse.to_h
 %>
-<h4>Gefundene Cachetypen</h4>
+<h4>Gefundene Behälter</h4>
 <table class="table table-condensed">
 <% cachehash.each_with_index do |(key, value),index|
 	lastindex = index %>
@@ -18,7 +17,7 @@ cachehash = cachehash.sort_by {|_key, value| value}.reverse.to_h
 	<tr>
 	<% end %>
 	<td>
-	<%= typeicon(key) %> <%= typestats(key)[0] %> (<%= typestats(key)[1] %>%)</td></td>
+	<%= sizeicon(key) %> <%= sizestats(key)[0] %> (<%= sizestats(key)[1] %>%)</td></td>
 	<% if (index % 4 == 3) %>
 	</tr>
 	<% end %>
