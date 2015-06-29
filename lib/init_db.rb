@@ -28,7 +28,8 @@ def init_db ()
         table.column :gcid, :string
         table.column :name, :string
         table.column :owner, :string
-        table.column :cachetype, :string
+        table.column :owner_guid, :string
+        table.column :type, :string
         table.column :size, :string
         table.column :difficulty, :double
         table.column :terrain, :double
@@ -58,7 +59,7 @@ def init_db ()
         table.column :name, :string
         table.column :status, :string
         table.column :guid, :string
-        table.column :cachetype, :string
+        table.column :type, :string
       end
       puts "Database initialized!"
     end
@@ -67,7 +68,9 @@ end
 
 # Here be models, necessary for using ActiveRecord
 class Cache < ActiveRecord::Base
+  self.inheritance_column = :inheritance_type
 end
 
 class Ownedcache < ActiveRecord::Base
+  self.inheritance_column = :inheritance_type
 end

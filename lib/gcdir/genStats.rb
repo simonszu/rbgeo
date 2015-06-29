@@ -25,10 +25,16 @@ def genStats(prefix, user, dir)
   dtmatrix = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "dtmatrix.erb"), 'r').read).result(binding)
 
   print "Found containers..."
-  containers_found = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "containers_found.erb"), 'r').read).result(binding)
+  sizes_found = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "sizes_found.erb"), 'r').read).result(binding)
 
   print "Found types..."
   types_found = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "types_found.erb"), 'r').read).result(binding)
+
+  print "Owner of founds..."
+  owner_found = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "owner_found.erb"), 'r').read).result(binding)
+
+  print "History..."
+  history = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "history.erb"), 'r').read).result(binding)
 
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
   erb = ERB.new(stats_template)

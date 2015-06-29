@@ -4,7 +4,7 @@ CONFIG_FILE = 'config.yaml'
 GC_CACHEDB = 'gc-caches.db'
 
 LOGIN_PAGE = 'https://www.geocaching.com/login/'
-MY_LOG_PAGE = 'http://www.geocaching.com/my/logs.aspx'
+MY_LOG_PAGE = 'http://www.geocaching.com/my/logs.aspx' 
 MY_OWNS_PAGE = 'http://www.geocaching.com/my/owned.aspx'
 
 LOGTYPES = ["Found it", "Didn't find it", "Will attend", "Owner Maintenance", "Needs Maintenance", "Needs Archived", "Archive", "Enable Listing", "Temporarily Disable Listing", "Post Reviewer Note", "Webcam Photo Taken", "Write note", "Attended"]
@@ -19,6 +19,10 @@ FINAL_LOGTYPES = ['Found it', 'Attended', 'Archive', 'Webcam Photo Taken']
 
 FOUND_LOGTYPES = ['Found it', 'Attended', 'Webcam Photo Taken']
 
-MAX_SLEEPTIME = 5
+MAX_SLEEPTIME = 0
 
 MILESTONE_INTERVAL = 50
+
+TABLE_WIDTH = 4
+
+MAX_OWNERS = 30

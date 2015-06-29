@@ -38,7 +38,7 @@ def parse_owns_gc()
       status = "Archived"
     end
 
-    cachetype = cachetable.css("a.lnk img")[0]["title"]
+    type = cachetable.css("a.lnk img")[0]["title"]
 
     # Get the GUID of the cache
     cachetable.css("a")[1]["href"].match(/\/seek\/cache_details\.aspx\?guid=(.+)/)
@@ -47,7 +47,7 @@ def parse_owns_gc()
     cache = Ownedcache.where(:guid => guid).first_or_create
     cache.status = status
     cache.name = name
-    cache.cachetype = cachetype
+    cache.type = type
     cache.save
   end
 end
