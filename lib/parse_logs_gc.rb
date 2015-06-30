@@ -130,7 +130,6 @@ def parse_logs_gc()
 
       # If something goes wrong, use some default values
       rescue
-        puts "Fehler beim Auslesen der Attribute!"
         next
       end
 
@@ -138,8 +137,15 @@ def parse_logs_gc()
       sleep (0..MAX_SLEEPTIME).to_a.sample
 
       # Get the log
-      print "loading log..."
-      log = a.get(cachetable.css("a")[2]["href"]).search("span[id = 'ctl00_ContentBody_LogBookPanel1_LogText']")[0].inner_text.strip
+      print "loading log"
+      logpage = ""
+      # Sometimes the logpage doesn't load properly. Repeat trying to load it, until there is no error
+      loop do
+        print "..."
+        logpage = a.get(cachetable.css("a")[2]["href"])
+        break if !logpage.title.eql? "An Error Has Occurred"
+      end
+      log = logpage.search("span[id = 'ctl00_ContentBody_LogBookPanel1_LogText']")[0].inner_text.strip
       sleep (0..MAX_SLEEPTIME).to_a.sample
 
       # Store every value into the database
