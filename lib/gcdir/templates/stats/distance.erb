@@ -1,0 +1,77 @@
+<h4>Funde nach Entfernung</h4>
+<%
+  distances = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  home_coords = [simplify_coords(home_lat), simplify_coords(home_lon)]
+  Cache.where(found: "1").each do |cache|
+    cache_coords = [simplify_coords(cache.coords_lat), simplify_coords(cache.coords_lon)]
+    distance = (coord_distance(home_coords, cache_coords)/1000).round(0)
+    case distance
+    when 1..10
+      distances[0] = distances[0].next
+    when 11..20
+      distances[1] = distances[1].next
+    when 21..30
+      distances[2] = distances[2].next
+    when 31..40
+      distances[3] = distances[3].next
+    when 41..50
+      distances[4] = distances[4].next
+    when 51..100
+      distances[5] = distances[5].next
+    when 101..200
+      distances[6] = distances[6].next
+    when 201..500
+      distances[7] = distances[7].next
+    when 501..1000
+      distances[8] = distances[8].next
+    else
+      distances[9] = distances[9].next
+    end
+  end
+%>
+<table class="table table-condensed">
+  <tr>
+    <th>Entfernung</th>
+    <th>Anzahl</th>
+  </tr>
+  <tr>
+    <td>0-10 km</td>
+    <td><%= distances[0] %></td>
+  </tr>
+  <tr>
+    <td>11-20 km</td>
+    <td><%= distances[1] %></td>
+  </tr>
+  <tr>
+    <td>21-30 km</td>
+    <td><%= distances[2] %></td>
+  </tr>
+  <tr>
+    <td>31-40 km</td>
+    <td><%= distances[3] %></td>
+  </tr>
+  <tr>
+    <td>41-50 km</td>
+    <td><%= distances[4] %></td>
+  </tr>
+  <tr>
+    <td>51-100 km</td>
+    <td><%= distances[5] %></td>
+  </tr>
+  <tr>
+    <td>101-200 km</td>
+    <td><%= distances[6] %></td>
+  </tr>
+  <tr>
+    <td>201-500 km</td>
+    <td><%= distances[7] %></td>
+  </tr>
+  <tr>
+    <td>501-1000 km</td>
+    <td><%= distances[8] %></td>
+  </tr>
+  <tr>
+    <td>>1000 km</td>
+    <td><%= distances[9] %></td>
+  </tr>
+</table>

@@ -25,8 +25,8 @@ $config = YAML::load(File.open(File.join(File.dirname(__FILE__), CONFIG_FILE)))
 # Connect and initialize db
 init_db
 
-parse_logs_gc()
-parse_owns_gc()
+#parse_logs_gc()
+#parse_owns_gc()
 generate_website()
 
 ActiveRecord::Base.connection.close

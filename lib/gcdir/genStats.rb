@@ -36,6 +36,9 @@ def genStats(prefix, user, dir)
   print "History..."
   history = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "history.erb"), 'r').read).result(binding)
 
+  print "Distances..."
+  distance = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "distance.erb"), 'r').read).result(binding)
+
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
   erb = ERB.new(stats_template)
   File.open(File.join(path, "stats.html"), "w") { |file|
