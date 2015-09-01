@@ -138,11 +138,16 @@ def logicon(logtype)
   return str
 end
 
+# Helper function to calculate percent values
+def percent(value, base)
+  return ((value.to_f/base.to_f)*100).round(1)
+end
+
 # Returns actual number and percent of a cache type
 def typestats(type)
   allcachecount = Cache.where(found: "1").length
   thiscount = Cache.where(type: type).length
-  thispercent = ((thiscount.to_f/allcachecount.to_f)*100).round(1)
+  thispercent = percent(thiscount, allcachecount)
   return [thiscount, thispercent]
 end
 
@@ -150,7 +155,7 @@ end
 def sizestats(size)
   allcachecount = Cache.where(found: "1").length
   thiscount = Cache.where(size: size).length
-  thispercent = ((thiscount.to_f/allcachecount.to_f)*100).round(1)
+  thispercent = percent(thiscount, allcachecount)
   return [thiscount, thispercent]
 end
 
@@ -158,6 +163,6 @@ end
 def ownerstats(owner)
   allcachecount = Cache.where(found: "1").length
   thiscount = Cache.where(owner: owner).length
-  thispercent = ((thiscount.to_f/allcachecount.to_f)*100).round(1)
+  thispercent = percent(thiscount, allcachecount)
   return [thiscount, thispercent]
 end

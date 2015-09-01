@@ -18,7 +18,7 @@ years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).
   startday = year
   endday = year.next_year.prev_day
   cachedays = Cache.where("logdate >= ? AND logdate < ? AND found = ?", startday.to_time.to_i, endday.to_time.to_i, "1").select(:logdate).distinct.length
-  cachedayspercent = ((cachedays.to_f/365.0)*100).round(2)
+  cachedayspercent = percent(cachedays, 365)
   cachedaysperweek = (cachedays.to_f/52.0).round(2)
   finds = Cache.where("logdate >= ? AND logdate < ? AND found = ?", startday.to_time.to_i, endday.to_time.to_i, "1").length
   findspercacheday = (finds.to_f/cachedays.to_f).round(2)

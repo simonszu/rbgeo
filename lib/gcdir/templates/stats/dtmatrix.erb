@@ -69,5 +69,5 @@ difficultymedian = (difficultymedian.to_f/allcaches.to_f).round(2)
   </tr>
 </table>
 <%= matrix.flatten.select{|item| item > 0}.length %> von 81 möglichen D/T-Kombinationen gefunden,
-<%= hardcaches %> (<%= ((hardcaches.to_f/allcaches.to_f)*100).round(1) %>%) Funde mit Difficulty oder Terrain >= 3,
+<%= hardcaches %> (<%= percent(hardcaches, allcaches) %>%) Funde mit Difficulty oder Terrain >= 3,
 Arithmetisches Mittel der D/T-Werte: <%= difficultymedian %>/<%= terrainmedian %>.
