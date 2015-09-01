@@ -14,7 +14,7 @@ def genStats(prefix, user, dir)
   header_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "header.erb"), 'r').read).result(binding)
   footer_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "footer.erb"), 'r').read).result(binding)
 
-  # General statistics
+  # Read the statistics templates and store their results so we can use them in stats.erb
   print "General statistics..."
   general_stats = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "general.erb"), 'r').read).result(binding)
 
@@ -39,8 +39,13 @@ def genStats(prefix, user, dir)
   print "Distances..."
   distance = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "distance.erb"), 'r').read).result(binding)
 
+  print "Hidden-Matrix..."
+  hiddenmatrix = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "hiddenmatrix.erb"), 'r').read).result(binding)
+
+  # Read the stats template to generate the statistics page
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
   erb = ERB.new(stats_template)
+  # Save the statistics page
   File.open(File.join(path, "stats.html"), "w") { |file|
     file.write(erb.result(binding))}
 

@@ -1,3 +1,5 @@
+
+# Calculates the months between a start and an enddate and stores them in an array
 def months_between(start_month, end_month)
   months = []
   ptr = start_month
@@ -8,6 +10,7 @@ def months_between(start_month, end_month)
   months
 end
 
+# Calculates the years between a start and an endddate and stores them in an array
 def years_between(start_year, end_year)
   years = []
   ptr = start_year
@@ -18,6 +21,7 @@ def years_between(start_year, end_year)
   years
 end
 
+# Check if there are logs written on an individual day
 def has_logs(day)
   if Cache.where("logdate = ? AND (logtype = ? OR logtype = ? OR logtype = ?)", day.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length > 0
     return true
@@ -107,6 +111,7 @@ def sizeicon(size)
   return str
 end
 
+# Returns the icon for a certain type of log
 def logicon(logtype)
   if logtype.eql? "Found it"
     str = '<img src="http://www.geocaching.com/images/logtypes/2.png" title="Found it">'

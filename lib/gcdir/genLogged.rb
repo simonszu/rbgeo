@@ -1,4 +1,4 @@
-# Generates the index file of the gcdir
+# Generates the table of all logged caches
 
 def genFound(prefix, user, dirname)
 
@@ -7,11 +7,16 @@ def genFound(prefix, user, dirname)
   path_prefix = prefix
   path = dirname
 
-  # Generate the index file
+  # Generate the file
+  # Read the partials
   header_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "header.erb"), 'r').read).result(binding)
   footer_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "footer.erb"), 'r').read).result(binding)
-  index_template = File.open(File.join(File.dirname(__FILE__), "templates", "logged.erb"), 'r').read
-  erb = ERB.new(index_template)
+
+  # Read the actual content
+  logged_template = File.open(File.join(File.dirname(__FILE__), "templates", "logged.erb"), 'r').read
+  
+  # Generate and save the page
+  erb = ERB.new(logged_template)
   File.open(File.join(path, "logged.html"), "w") { |file|
     file.write(erb.result(binding))}
 end
