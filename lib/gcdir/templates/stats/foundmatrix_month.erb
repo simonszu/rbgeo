@@ -18,16 +18,35 @@ Cache.where('found = ?', 1).each do |cache|
 	j = (Time.at(cache.logdate).month)-1
 	matrix[i][j] += 1
 end
+
+# Calculate the sums
+gesamtyearsum = Array.new
+gesamtmonthsum = Array.new
+for i in 0..matrix.length-1
+  gesamtyearsum.push(matrix[i].reduce(:+))
+end
+newmatrix = matrix.transpose
+for i in 0..newmatrix.length-1
+  gesamtmonthsum.push(newmatrix[i].reduce(:+))
+end
 %>
 <h4>Funde nach Monat</h4>
 <table class="table table-bordered table-condensed">
-<tr><td></td><td colspan="12" align="center"><strong>Monat</strong></td></tr>
-<tr><td><strong>Jahr</strong></td><td><strong>Jan</strong></td><td><strong>Feb</strong></td><td><strong>Mar</strong></td><td><strong>Apr</strong></td><td><strong>Mai</strong></td><td><strong>Jun</strong></td><td><strong>Jul</strong></td><td><strong>Aug</strong></td><td><strong>Sept</strong></td><td><strong>Okt</strong></td><td><strong>Nov</strong></td><td><strong>Dez</strong></td></tr>
+<tr><td></td><td colspan="12" align="center"><strong>Monat</strong></td><td></td></tr>
+<tr><td><strong>Jahr</strong></td><td><strong>Jan</strong></td><td><strong>Feb</strong></td><td><strong>Mar</strong></td><td><strong>Apr</strong></td><td><strong>Mai</strong></td><td><strong>Jun</strong></td><td><strong>Jul</strong></td><td><strong>Aug</strong></td><td><strong>Sept</strong></td><td><strong>Okt</strong></td><td><strong>Nov</strong></td><td><strong>Dez</strong></td><td><strong>Gesamt</strong></td></tr>
 <% logyears.each do |year| %>
 <tr><td><strong><%= year.strftime('%Y') %></strong></td>
 <% 12.times do |month| %>
 <td><%= matrix[(year.strftime('%Y').to_i)-firstlogyear][month] %></td>
 <% end %>
+<td><%= gesamtyearsum[(year.strftime('%Y').to_i)-firstlogyear] %></td>
 </tr>
 <% end %>
+<tr>
+<td><strong>Gesamt</strong></td>
+<% 12.times do |month| %>
+<td><%= gesamtmonthsum[month] %></td>
+<% end %>
+</tr>
 </table>
+<center>In <strong><%= matrix.flatten.select{|item| item > 0}.length %></strong> von <%= matrix.flatten.length %> möglichen Monaten cachen gewesen. (<%= percent(matrix.flatten.select{|item| item > 0}.length, matrix.flatten.length) %>%).</center>

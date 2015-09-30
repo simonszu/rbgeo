@@ -1,16 +1,28 @@
 <%= header_partial%>
 <h2>Statistik vom <%= Time.now.strftime('%d.%m.%Y') %></h2>
 <%= general_stats %>
+<% #Kumulierte Funde nach Monat %>
+<% #Funde nach Richtung %>
+<% #Versteckte Caches nach Bundesländern %>
 <%= milestones %>
 <%= history %>
+<%= foundmatrix_month %>
+<% #Funde nach Monaten, Balkendiagramm %>
 <%= sizes_found %>
 <%= types_found %>
 <%= dtmatrix %>
+<% #Cachefunde nach Ländern %>
+<% #Cachefunde nach Bundesländern %>
+<%= foundmatrix_day %>
 <%= distance %>
 <%= owner_found %>
 <%= foundsviahiddenmatrix_day %>
 <%= foundsviahiddenmatrix_month %>
-<%= foundmatrix_day %>
-<%= foundmatrix_month %>
+<% #Fav list %>
+<% #GCVote Matrix %>
+<% #Statistik versteckter Caches %>
+<% #Versteckte Behälter %>
+<% #Versteckte Cachetypen %>
+
 
 <%= footer_partial %>

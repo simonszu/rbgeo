@@ -15,15 +15,28 @@ Cache.where('found = ?', 1).each do |cache|
 	j = (Time.at(cache.hiddendate).day)-1
 	matrix[i][j] += 1
 end
+
+# Calculate the sums
+gesamtmonthsum = Array.new
+gesamtdaysum = Array.new
+for i in 0..matrix.length-1
+  gesamtmonthsum.push(matrix[i].reduce(:+))
+end
+newmatrix = matrix.transpose
+for i in 0..newmatrix.length-1
+  gesamtdaysum.push(newmatrix[i].reduce(:+))
+end
+
 %>
 <h4>Funde nach Cacheplatzierung (Tag)</h4>
 <table class="table table-bordered table-condensed">
-<tr><td></td><td colspan="31" align="center"><strong>Tag</strong></tr>
+<tr><td></td><td colspan="31" align="center"><strong>Tag</strong></td><td></td></tr>
 
 <tr><td><strong>Monat</strong></td>
 <% 31.times do |day| %>
 <td><strong><%= day+1 %></strong></td>
 <% end %>
+<td><strong>Gesamt</strong></td>
 </tr>
 
 <tr>
@@ -31,6 +44,7 @@ end
 <% 31.times do |day| %>
 <td><%= matrix[0][day] %></td>
 <% end %>
+<td><%= gesamtmonthsum[0] %></td>
 </tr>
 
 <tr>
@@ -40,6 +54,7 @@ end
 <% end %>
 <td>X</td>
 <td>X</td>
+<td><%= gesamtmonthsum[1] %></td>
 </tr>
 
 <tr>
@@ -47,6 +62,7 @@ end
 <% 31.times do |day| %>
 <td><%= matrix[2][day] %></td>
 <% end %>
+<td><%= gesamtmonthsum[2] %></td>
 </tr>
 
 <tr>
@@ -55,6 +71,7 @@ end
 <td><%= matrix[3][day] %></td>
 <% end %>
 <td>X</td>
+<td><%= gesamtmonthsum[3] %></td>
 </tr>
 
 <tr>
@@ -62,6 +79,7 @@ end
 <% 31.times do |day| %>
 <td><%= matrix[4][day] %></td>
 <% end %>
+<td><%= gesamtmonthsum[4] %></td>
 </tr>
 
 <tr>
@@ -70,6 +88,7 @@ end
 <td><%= matrix[5][day] %></td>
 <% end %>
 <td>X</td>
+<td><%= gesamtmonthsum[5] %></td>
 </tr>
 
 <tr>
@@ -77,6 +96,7 @@ end
 <% 31.times do |day| %>
 <td><%= matrix[6][day] %></td>
 <% end %>
+<td><%= gesamtmonthsum[6] %></td>
 </tr>
 
 <tr>
@@ -84,6 +104,7 @@ end
 <% 31.times do |day| %>
 <td><%= matrix[7][day] %></td>
 <% end %>
+<td><%= gesamtmonthsum[7] %></td>
 </tr>
 
 <tr>
@@ -92,6 +113,7 @@ end
 <td><%= matrix[8][day] %></td>
 <% end %>
 <td>X</td>
+<td><%= gesamtmonthsum[8] %></td>
 </tr>
 
 <tr>
@@ -99,6 +121,7 @@ end
 <% 31.times do |day| %>
 <td><%= matrix[9][day] %></td>
 <% end %>
+<td><%= gesamtmonthsum[9] %></td>
 </tr>
 
 <tr>
@@ -107,6 +130,7 @@ end
 <td><%= matrix[10][day] %></td>
 <% end %>
 <td>X</td>
+<td><%= gesamtmonthsum[10] %></td>
 </tr>
 
 <tr>
@@ -114,6 +138,15 @@ end
 <% 31.times do |day| %>
 <td><%= matrix[11][day] %></td>
 <% end %>
+<td><%= gesamtmonthsum[11] %></td>
+</tr>
+
+<tr>
+<td><strong>Gesamt</strong></td>
+<% 31.times do |day| %>
+<td><%= gesamtdaysum[day] %></td>
+<% end %>
 </tr>
 
 </table>
+<center>Caches, die an  <strong><%= matrix.flatten.select{|item| item > 0}.length %></strong> von 366 möglichen Tagen ausgelegt wurden, gefunden. (<%= percent(matrix.flatten.select{|item| item > 0}.length, 366) %>%).</center>

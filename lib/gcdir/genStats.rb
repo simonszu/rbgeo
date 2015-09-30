@@ -45,7 +45,7 @@ def genStats(prefix, user, dir)
   print "Founds via Hidden-Matrix (Day)..."
   foundsviahiddenmatrix_day = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "foundsviahiddenmatrix_day.erb"), 'r').read).result(binding)
 
-   print "Found-Matrix (Month)..."
+  print "Found-Matrix (Month)..."
   foundmatrix_month = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "foundmatrix_month.erb"), 'r').read).result(binding)
 
   print "Found-Matrix (Day)..."
