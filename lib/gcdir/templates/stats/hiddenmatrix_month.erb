@@ -3,7 +3,7 @@ firsthiddenyear = Time.at(Cache.order(:hiddendate).first.hiddendate).year
 lasthiddenyear = Time.at(Cache.order(hiddendate: :desc).first.hiddendate).year
 hiddenyears = years_between(firsthiddenyear, lasthiddenyear)
 %>
-<h4>Funde nach Cacheplatzierung</h4>
+<h4>Funde nach Cacheplatzierung (Monat)</h4>
 <table class="table table-bordered table-condensed">
 <tr><td></td><td colspan="12" align="center"><strong>Monat</strong></td></tr>
 <tr><td><strong>Jahr</strong></td><td><strong>Jan</strong></td><td><strong>Feb</strong></td><td><strong>Mar</strong></td><td><strong>Apr</strong></td><td><strong>Mai</strong></td><td><strong>Jun</strong></td><td><strong>Jul</strong></td><td><strong>Aug</strong></td><td><strong>Sept</strong></td><td><strong>Okt</strong></td><td><strong>Nov</strong></td><td><strong>Dez</strong></td></tr>

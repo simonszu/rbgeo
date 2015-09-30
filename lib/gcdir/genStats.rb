@@ -39,8 +39,8 @@ def genStats(prefix, user, dir)
   print "Distances..."
   distance = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "distance.erb"), 'r').read).result(binding)
 
-  print "Hidden-Matrix..."
-  hiddenmatrix = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "hiddenmatrix.erb"), 'r').read).result(binding)
+  print "Hidden-Matrix (Month)..."
+  hiddenmatrix = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "hiddenmatrix_month.erb"), 'r').read).result(binding)
 
   # Read the stats template to generate the statistics page
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
