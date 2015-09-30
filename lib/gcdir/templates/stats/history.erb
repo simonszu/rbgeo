@@ -14,7 +14,7 @@
 <%
 # Calculate all years between the first find and now
 dateoffirstcache = Time.at(Cache.first.logdate).to_date
-years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).each do |year|
+years_between(dateoffirstcache.year, Time.now.to_date.year).each do |year|
   startday = year
   endday = year.next_year.prev_day
   cachedays = Cache.where("logdate >= ? AND logdate < ? AND found = ?", startday.to_time.to_i, endday.to_time.to_i, "1").select(:logdate).distinct.length

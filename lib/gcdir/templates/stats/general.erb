@@ -117,7 +117,7 @@ end
 maxmonthstring = maxmonth.strftime('%m.%Y')
 
 # Calculate the year with the most finds
-years_between(Date.new(dateoffirstcache.year), Date.new(Time.now.to_date.year)).each do |year|
+years_between(dateoffirstcache.year, Time.now.to_date.year).each do |year|
   startday = year
   endday = year.next_year.prev_day
   foundsinthisyear = Cache.where("logdate <= ? AND logdate >= ?  AND found = ?", endday.to_time.to_i, startday.to_time.to_i, 1).length

@@ -13,8 +13,8 @@ end
 # Calculates the years between a start and an endddate and stores them in an array
 def years_between(start_year, end_year)
   years = []
-  ptr = start_year
-  while ptr <= end_year do
+  ptr = Date.new(start_year)
+  while ptr <= Date.new(end_year) do
     years << ptr
     ptr = ptr >> (1*12)
   end
