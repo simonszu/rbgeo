@@ -29,6 +29,21 @@ newmatrix = matrix.transpose
 for i in 0..newmatrix.length-1
   gesamtmonthsum.push(newmatrix[i].reduce(:+))
 end
+
+# Calculate some values for the gradients
+# Matrix
+maxvalue = matrix.flatten.max
+minvalue = matrix.flatten.select{|item| item > 0}.min
+g = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (maxvalue-minvalue))
+# Rowsums
+rmaxvalue = gesamtyearsum.max
+rminvalue = gesamtyearsum.select{|item| item > 0}.min
+rg = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (rmaxvalue-rminvalue))
+# Colsums
+cmaxvalue = gesamtmonthsum.max
+cminvalue = gesamtmonthsum.select{|item| item > 0}.min
+cg = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (cmaxvalue-cminvalue))
+
 %>
 <h4>Funde nach Monat</h4>
 <table class="table table-bordered table-condensed">
@@ -37,15 +52,27 @@ end
 <% logyears.each do |year| %>
 <tr><td><strong><%= year.strftime('%Y') %></strong></td>
 <% 12.times do |month| %>
-<td><%= matrix[(year.strftime('%Y').to_i)-firstlogyear][month] %></td>
+<td
+<% if matrix[(year.strftime('%Y').to_i)-firstlogyear][month] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[(year.strftime('%Y').to_i)-firstlogyear][month]-minvalue).to_s(16) %>"
 <% end %>
-<td><%= gesamtyearsum[(year.strftime('%Y').to_i)-firstlogyear] %></td>
+><%= matrix[(year.strftime('%Y').to_i)-firstlogyear][month] %></td>
+<% end %>
+<td
+<% if gesamtyearsum[(year.strftime('%Y').to_i)-firstlogyear] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtyearsum[(year.strftime('%Y').to_i)-firstlogyear]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtyearsum[(year.strftime('%Y').to_i)-firstlogyear] %></td>
 </tr>
 <% end %>
 <tr>
 <td><strong>Gesamt</strong></td>
 <% 12.times do |month| %>
-<td><%= gesamtmonthsum[month] %></td>
+<td
+<% if gesamtmonthsum[month] > 0 %>
+bgcolor = "#<%= cg.gradient(gesamtmonthsum[month]-cminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[month] %></td>
 <% end %>
 </tr>
 </table>

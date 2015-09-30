@@ -46,6 +46,20 @@ end
 
 terrainmedian = (terrainmedian.to_f/allcaches.to_f).round(2)
 difficultymedian = (difficultymedian.to_f/allcaches.to_f).round(2)
+
+# Calculate some values for the gradients
+# Matrix
+maxvalue = matrix.flatten.max
+minvalue = matrix.flatten.select{|item| item > 0}.min
+g = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (maxvalue-minvalue))
+# Rowsums
+rmaxvalue = gesamtdifficulty.max
+rminvalue = gesamtdifficulty.select{|item| item > 0}.min
+rg = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (rmaxvalue-rminvalue))
+# Colsums
+cmaxvalue = gesamtterrain.max
+cminvalue = gesamtterrain.select{|item| item > 0}.min
+cg = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (cmaxvalue-cminvalue))
 %>
 
 <h4>D/T-Matrix</h4>
@@ -58,13 +72,25 @@ difficultymedian = (difficultymedian.to_f/allcaches.to_f).round(2)
   <% for i in 1..matrix.length-1 %>
   <tr>
     <td><strong><%= ((i+1).to_f/2).round(1) unless ((i+1).to_f/2).round(1) == 0.5%></strong></td>
-    <% for j in 1..matrix[0].length-1 %><td><%= matrix[i][j] %></td><% end %>
-    <td><%= gesamtdifficulty[i] %></td>
+    <% for j in 1..matrix[0].length-1 %><td
+    <% if matrix[i][j] > 0 %>
+    bgcolor = "#<%= g.gradient(matrix[i][j]-minvalue).to_s(16) %>"
+    <% end %>
+    ><%= matrix[i][j] %></td><% end %>
+    <td
+    <% if gesamtdifficulty[i] > 0 %>
+    bgcolor = "#<%= rg.gradient(gesamtdifficulty[i]-rminvalue).to_s(16) %>"
+    <% end %>
+    ><%= gesamtdifficulty[i] %></td>
   </tr><% end %>
   <tr>
     <td><strong>Gesamt</strong></td>
     <% for i in 1..gesamtterrain.length-1 %>
-    <td><%= gesamtterrain[i] %></td>
+    <td
+    <% if gesamtterrain[i] > 0 %>
+    bgcolor = "#<%= cg.gradient(gesamtterrain[i]-cminvalue).to_s(16) %>"
+    <% end %>
+    ><%= gesamtterrain[i] %></td>
     <% end %>
   </tr>
 </table>

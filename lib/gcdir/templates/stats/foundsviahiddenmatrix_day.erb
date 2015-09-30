@@ -27,6 +27,20 @@ for i in 0..newmatrix.length-1
   gesamtdaysum.push(newmatrix[i].reduce(:+))
 end
 
+# Calculate some values for the gradients
+# Matrix
+maxvalue = matrix.flatten.max
+minvalue = matrix.flatten.select{|item| item > 0}.min
+g = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (maxvalue-minvalue))
+# Rowsums
+rmaxvalue = gesamtmonthsum.max
+rminvalue = gesamtmonthsum.select{|item| item > 0}.min
+rg = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (rmaxvalue-rminvalue))
+# Colsums
+cmaxvalue = gesamtdaysum.max
+cminvalue = gesamtdaysum.select{|item| item > 0}.min
+cg = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (cmaxvalue-cminvalue))
+
 %>
 <h4>Funde nach Cacheplatzierung (Tag)</h4>
 <table class="table table-bordered table-condensed">
@@ -42,109 +56,209 @@ end
 <tr>
 <td><strong>Jan</strong></td>
 <% 31.times do |day| %>
-<td><%= matrix[0][day] %></td>
+<td
+<% if matrix[0][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[0][day]-minvalue).to_s(16) %>"
 <% end %>
-<td><%= gesamtmonthsum[0] %></td>
+><%= matrix[0][day] %></td>
+<% end %>
+<td
+<% if gesamtmonthsum[0] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[0]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[0] %></td>
 </tr>
 
 <tr>
 <td><strong>Feb</strong></td>
 <% 29.times do |day| %>
-<td><%= matrix[1][day] %></td>
+<td
+<% if matrix[1][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[1][day]-minvalue).to_s(16) %>"
+<% end %>
+><%= matrix[1][day] %></td>
 <% end %>
 <td>X</td>
 <td>X</td>
-<td><%= gesamtmonthsum[1] %></td>
+<td
+<% if gesamtmonthsum[1] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[1]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[1] %></td>
 </tr>
 
 <tr>
 <td><strong>Mar</strong></td>
 <% 31.times do |day| %>
-<td><%= matrix[2][day] %></td>
+<td
+<% if matrix[2][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[2][day]-minvalue).to_s(16) %>"
 <% end %>
-<td><%= gesamtmonthsum[2] %></td>
+><%= matrix[2][day] %></td>
+<% end %>
+<td
+<% if gesamtmonthsum[2] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[2]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[2] %></td>
 </tr>
 
 <tr>
 <td><strong>Apr</strong></td>
 <% 30.times do |day| %>
-<td><%= matrix[3][day] %></td>
+<td
+<% if matrix[3][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[3][day]-minvalue).to_s(16) %>"
+<% end %>
+><%= matrix[3][day] %></td>
 <% end %>
 <td>X</td>
-<td><%= gesamtmonthsum[3] %></td>
+<td
+<% if gesamtmonthsum[3] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[3]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[3] %></td>
 </tr>
 
 <tr>
 <td><strong>Mai</strong></td>
 <% 31.times do |day| %>
-<td><%= matrix[4][day] %></td>
+<td
+<% if matrix[4][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[4][day]-minvalue).to_s(16) %>"
 <% end %>
-<td><%= gesamtmonthsum[4] %></td>
+><%= matrix[4][day] %></td>
+<% end %>
+<td
+<% if gesamtmonthsum[4] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[4]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[4] %></td>
 </tr>
 
 <tr>
 <td><strong>Jun</strong></td>
 <% 30.times do |day| %>
-<td><%= matrix[5][day] %></td>
+<td
+<% if matrix[5][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[5][day]-minvalue).to_s(16) %>"
+<% end %>
+><%= matrix[5][day] %></td>
 <% end %>
 <td>X</td>
-<td><%= gesamtmonthsum[5] %></td>
+<td
+<% if gesamtmonthsum[5] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[5]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[5] %></td>
 </tr>
 
 <tr>
 <td><strong>Jul</strong></td>
 <% 31.times do |day| %>
-<td><%= matrix[6][day] %></td>
+<td
+<% if matrix[6][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[6][day]-minvalue).to_s(16) %>"
 <% end %>
-<td><%= gesamtmonthsum[6] %></td>
+><%= matrix[6][day] %></td>
+<% end %>
+<td
+<% if gesamtmonthsum[6] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[6]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[6] %></td>
 </tr>
 
 <tr>
 <td><strong>Aug</strong></td>
 <% 31.times do |day| %>
-<td><%= matrix[7][day] %></td>
+<td
+<% if matrix[7][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[7][day]-minvalue).to_s(16) %>"
 <% end %>
-<td><%= gesamtmonthsum[7] %></td>
+><%= matrix[7][day] %></td>
+<% end %>
+<td
+<% if gesamtmonthsum[7] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[7]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[7] %></td>
 </tr>
 
 <tr>
 <td><strong>Sep</strong></td>
 <% 30.times do |day| %>
-<td><%= matrix[8][day] %></td>
+<td
+<% if matrix[8][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[8][day]-minvalue).to_s(16) %>"
+<% end %>
+><%= matrix[8][day] %></td>
 <% end %>
 <td>X</td>
-<td><%= gesamtmonthsum[8] %></td>
+<td
+<% if gesamtmonthsum[8] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[8]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[8] %></td>
 </tr>
 
 <tr>
 <td><strong>Oct</strong></td>
 <% 31.times do |day| %>
-<td><%= matrix[9][day] %></td>
+<td
+<% if matrix[9][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[9][day]-minvalue).to_s(16) %>"
 <% end %>
-<td><%= gesamtmonthsum[9] %></td>
+><%= matrix[9][day] %></td>
+<% end %>
+<td
+<% if gesamtmonthsum[9] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[9]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[9] %></td>
 </tr>
 
 <tr>
 <td><strong>Nov</strong></td>
 <% 30.times do |day| %>
-<td><%= matrix[10][day] %></td>
+<td
+<% if matrix[10][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[10][day]-minvalue).to_s(16) %>"
+<% end %>
+><%= matrix[10][day] %></td>
 <% end %>
 <td>X</td>
-<td><%= gesamtmonthsum[10] %></td>
+<td
+<% if gesamtmonthsum[10] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[10]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[10] %></td>
 </tr>
 
 <tr>
 <td><strong>Dez</strong></td>
 <% 31.times do |day| %>
-<td><%= matrix[11][day] %></td>
+<td
+<% if matrix[11][day] > 0 %>
+bgcolor = "#<%= g.gradient(matrix[11][day]-minvalue).to_s(16) %>"
 <% end %>
-<td><%= gesamtmonthsum[11] %></td>
+><%= matrix[11][day] %></td>
+<% end %>
+<td
+<% if gesamtmonthsum[11] > 0 %>
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[11]-rminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtmonthsum[11] %></td>
 </tr>
 
 <tr>
 <td><strong>Gesamt</strong></td>
 <% 31.times do |day| %>
-<td><%= gesamtdaysum[day] %></td>
+<td
+<% if gesamtdaysum[day] > 0 %>
+bgcolor = "#<%= cg.gradient(gesamtdaysum[day]-cminvalue).to_s(16) %>"
+<% end %>
+><%= gesamtdaysum[day] %></td>
 <% end %>
 </tr>
 

@@ -28,6 +28,9 @@
       distances[9] = distances[9].next
     end
   end
+
+# Calculate some values for the gradients
+g = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, Cache.all.length)
 %>
 <table class="table table-condensed">
   <tr>
@@ -36,42 +39,82 @@
   </tr>
   <tr>
     <td>0-10 km</td>
-    <td><%= distances[0] %> (<%= percent(distances[0], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[0] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[0]).to_s(16) %>"
+    <% end %>
+    ><%= distances[0] %> (<%= percent(distances[0], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>11-20 km</td>
-    <td><%= distances[1] %> (<%= percent(distances[1], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[1] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[1]).to_s(16) %>"
+    <% end %>
+    ><%= distances[1] %> (<%= percent(distances[1], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>21-30 km</td>
-    <td><%= distances[2] %> (<%= percent(distances[2], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[2] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[2]).to_s(16) %>"
+    <% end %>
+    ><%= distances[2] %> (<%= percent(distances[2], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>31-40 km</td>
-    <td><%= distances[3] %> (<%= percent(distances[3], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[3] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[3]).to_s(16) %>"
+    <% end %>
+    ><%= distances[3] %> (<%= percent(distances[3], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>41-50 km</td>
-    <td><%= distances[4] %> (<%= percent(distances[4], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[4] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[4]).to_s(16) %>"
+    <% end %>
+    ><%= distances[4] %> (<%= percent(distances[4], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>51-100 km</td>
-    <td><%= distances[5] %> (<%= percent(distances[5], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[5] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[5]).to_s(16) %>"
+    <% end %>
+    ><%= distances[5] %> (<%= percent(distances[5], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>101-200 km</td>
-    <td><%= distances[6] %> (<%= percent(distances[6], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[6] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[6]).to_s(16) %>"
+    <% end %>
+    ><%= distances[6] %> (<%= percent(distances[6], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>201-500 km</td>
-    <td><%= distances[7] %> (<%= percent(distances[7], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[7] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[7]).to_s(16) %>"
+    <% end %>
+    ><%= distances[7] %> (<%= percent(distances[7], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>501-1000 km</td>
-    <td><%= distances[8] %> (<%= percent(distances[8], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[8] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[8]).to_s(16) %>"
+    <% end %>
+    ><%= distances[8] %> (<%= percent(distances[8], Cache.where(found: "1").length) %>%)</td>
   </tr>
   <tr>
     <td>>1000 km</td>
-    <td><%= distances[9] %> (<%= percent(distances[9], Cache.where(found: "1").length) %>%)</td>
+    <td
+    <% if distances[9] > 0 %>
+    bgcolor = "#<%= g.gradient(distances[9]).to_s(16) %>"
+    <% end %>
+    ><%= distances[9] %> (<%= percent(distances[9], Cache.where(found: "1").length) %>%)</td>
   </tr>
 </table>
