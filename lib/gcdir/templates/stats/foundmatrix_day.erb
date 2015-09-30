@@ -1,0 +1,119 @@
+<%
+# First dimension: Months, second dimension: days
+matrix = Array.new(12) {Array.new(31)}
+
+# Init the matrix
+for i in 0..matrix.length-1
+  for j in 0..matrix[0].length-1
+    matrix[i][j] = 0
+  end
+end
+
+# Fill the matrix and count the hidden dates
+Cache.where('found = ?', 1).each do |cache|
+	i = (Time.at(cache.logdate).month)-1
+	j = (Time.at(cache.logdate).day)-1
+	matrix[i][j] += 1
+end
+%>
+<h4>Funde nach Datum</h4>
+<table class="table table-bordered table-condensed">
+<tr><td></td><td colspan="31" align="center"><strong>Tag</strong></tr>
+
+<tr><td><strong>Monat</strong></td>
+<% 31.times do |day| %>
+<td><strong><%= day+1 %></strong></td>
+<% end %>
+</tr>
+
+<tr>
+<td><strong>Jan</strong></td>
+<% 31.times do |day| %>
+<td><%= matrix[0][day] %></td>
+<% end %>
+</tr>
+
+<tr>
+<td><strong>Feb</strong></td>
+<% 29.times do |day| %>
+<td><%= matrix[1][day] %></td>
+<% end %>
+<td>X</td>
+<td>X</td>
+</tr>
+
+<tr>
+<td><strong>Mar</strong></td>
+<% 31.times do |day| %>
+<td><%= matrix[2][day] %></td>
+<% end %>
+</tr>
+
+<tr>
+<td><strong>Apr</strong></td>
+<% 30.times do |day| %>
+<td><%= matrix[3][day] %></td>
+<% end %>
+<td>X</td>
+</tr>
+
+<tr>
+<td><strong>Mai</strong></td>
+<% 31.times do |day| %>
+<td><%= matrix[4][day] %></td>
+<% end %>
+</tr>
+
+<tr>
+<td><strong>Jun</strong></td>
+<% 30.times do |day| %>
+<td><%= matrix[5][day] %></td>
+<% end %>
+<td>X</td>
+</tr>
+
+<tr>
+<td><strong>Jul</strong></td>
+<% 31.times do |day| %>
+<td><%= matrix[6][day] %></td>
+<% end %>
+</tr>
+
+<tr>
+<td><strong>Aug</strong></td>
+<% 31.times do |day| %>
+<td><%= matrix[7][day] %></td>
+<% end %>
+</tr>
+
+<tr>
+<td><strong>Sep</strong></td>
+<% 30.times do |day| %>
+<td><%= matrix[8][day] %></td>
+<% end %>
+<td>X</td>
+</tr>
+
+<tr>
+<td><strong>Oct</strong></td>
+<% 31.times do |day| %>
+<td><%= matrix[9][day] %></td>
+<% end %>
+</tr>
+
+<tr>
+<td><strong>Nov</strong></td>
+<% 30.times do |day| %>
+<td><%= matrix[10][day] %></td>
+<% end %>
+<td>X</td>
+</tr>
+
+<tr>
+<td><strong>Dez</strong></td>
+<% 31.times do |day| %>
+<td><%= matrix[11][day] %></td>
+<% end %>
+</tr>
+
+</table>

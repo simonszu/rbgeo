@@ -1,0 +1,33 @@
+<%
+firstlogyear = Time.at(Cache.order(:logdate).first.logdate).year
+lastlogyear = Time.at(Cache.order(logdate: :desc).first.logdate).year
+logyears = years_between(firstlogyear, lastlogyear)
+
+# First Dimension is years, second dimension is month
+matrix = Array.new(logyears.length) {Array.new(12)}
+
+# Init the matrix
+for i in 0..matrix.length-1
+  for j in 0..matrix[0].length-1
+    matrix[i][j] = 0
+  end
+end
+
+Cache.where('found = ?', 1).each do |cache|
+	i = (Time.at(cache.logdate).year)-firstlogyear
+	j = (Time.at(cache.logdate).month)-1
+	matrix[i][j] += 1
+end
+%>
+<h4>Funde nach Monat</h4>
+<table class="table table-bordered table-condensed">
+<tr><td></td><td colspan="12" align="center"><strong>Monat</strong></td></tr>
+<tr><td><strong>Jahr</strong></td><td><strong>Jan</strong></td><td><strong>Feb</strong></td><td><strong>Mar</strong></td><td><strong>Apr</strong></td><td><strong>Mai</strong></td><td><strong>Jun</strong></td><td><strong>Jul</strong></td><td><strong>Aug</strong></td><td><strong>Sept</strong></td><td><strong>Okt</strong></td><td><strong>Nov</strong></td><td><strong>Dez</strong></td></tr>
+<% logyears.each do |year| %>
+<tr><td><strong><%= year.strftime('%Y') %></strong></td>
+<% 12.times do |month| %>
+<td><%= matrix[(year.strftime('%Y').to_i)-firstlogyear][month] %></td>
+<% end %>
+</tr>
+<% end %>
+</table>
