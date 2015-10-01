@@ -50,6 +50,10 @@ def genStats(prefix, user, dir)
 
   print "Found-Matrix (Day)..."
   foundmatrix_day = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "foundmatrix_day.erb"), 'r').read).result(binding)
+
+  print "Founds-Direction-Diagram..."
+  founds_direction = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "founds_direction.erb"), 'r').read).result(binding)
+  
   # Read the stats template to generate the statistics page
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
   erb = ERB.new(stats_template)

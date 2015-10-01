@@ -11,6 +11,7 @@ require 'sqlite3'
 require 'fileutils'
 require 'erb'
 require 'active_record'
+require 'geocoder'
 
 # Save the starting time for benchmarking
 beginning_time = Time.now

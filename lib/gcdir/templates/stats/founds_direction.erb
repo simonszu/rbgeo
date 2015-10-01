@@ -1,0 +1,185 @@
+<%
+# Radardiagramme
+# TODO: Wie sieht das schöner aus?
+home_lat_coord = simplify_coords(home_lat)
+home_lon_coord = simplify_coords(home_lon)
+
+mydirections =  %w[N NNE NE ENE E ESE SE SSE S SSW SW WSW W WNW NW NNW]
+
+nc = 0
+na = Array.new
+nnec = 0
+nnea = Array.new
+nec = 0
+nea = Array.new
+enec = 0
+enea = Array.new
+ec = 0
+ea = Array.new
+esec = 0
+esea = Array.new
+sec = 0
+sea = Array.new
+ssec = 0
+ssea = Array.new
+sc = 0
+sa = Array.new
+sswc = 0
+sswa = Array.new
+swc = 0
+swa = Array.new
+wswc = 0
+wswa = Array.new
+wc = 0
+wa = Array.new
+wnwc = 0
+wnwa = Array.new
+nwc = 0
+nwa = Array.new
+nnwc = 0
+nnwa = Array.new
+
+Cache.all.each do |cache|
+	thislat = simplify_coords(cache.coords_lat)
+	thislon = simplify_coords(cache.coords_lon)
+	direction = Geocoder::Calculations.compass_point(Geocoder::Calculations.bearing_between([home_lat_coord, home_lon_coord], [thislat, thislon]), mydirections)
+	distance = (coord_distance([home_lat_coord, home_lon_coord], [thislat, thislon])/1000).round(2)
+	case direction
+	when "N"
+		nc += 1
+		na.push(distance)
+	when "NNE"
+		nnec += 1
+		nnea.push(distance)
+	when "NE"
+		nec +=1
+		nea.push(distance) 
+	when "ENE"
+		enec += 1
+		enea.push(distance)
+	when "E"
+		ec += 1
+		ea.push(distance)
+	when "ESE"
+		esec += 1
+		esea.push(distance)
+	when "SE"
+		sec += 1
+		sea.push(distance)
+	when "SSE"
+		ssec += 1
+		ssea.push(distance)
+	when "S"
+		sc += 1
+		sa.push(distance)
+	when "SSW"
+		sswc += 1
+		sswa.push(distance)
+	when "SW"
+		swc += 1
+		swa.push(distance)
+	when "WSW"
+		wswc += 1
+		wswa.push(distance)
+	when "W"
+		wc +=1
+		wa.push(distance) 
+	when "WNW"
+		wnwc += 1
+		wnwa.push(distance)
+	when "NW"
+		nwc += 1
+		nwa.push(distance)
+	when "NNW"
+		nnwc += 1
+		nnwa.push(distance)
+	end
+end
+
+bbv = [nc, nnec, nec, enec, ec, esec, sec, ssec, sc, sswc, swc, wswc, wc, wnwc, nwc, nnwc].max
+bdv = [na.mean, nnea.mean, nea.mean, enea.mean, ea.mean, esea.mean, sea.mean, ssea.mean, sa.mean, sswa.mean, swa.mean, wswa.mean, wa.mean, wnwa.mean, nwa.mean, nnwa.mean].max
+%>
+
+<h4>Funde nach Richtung</h4>
+<script type='text/javascript'>
+	google.setOnLoadCallback(drawChart);
+	google.setOnLoadCallback(drawDChart);
+  	function drawChart() {
+    	var dataTable = new google.visualization.DataTable();
+    	dataTable.addColumn('number');
+    	dataTable.addRows([
+    		[<%= nc %>],
+      		[<%= nnec %>],
+      		[<%= nec %>],
+      		[<%= enec %>],
+      		[<%= ec %>],
+      		[<%= esec %>],
+      		[<%= sec %>],
+      		[<%= ssec %>],
+      		[<%= sc %>],
+      		[<%= sswc %>],
+      		[<%= swc %>],
+      		[<%= wswc %>],
+      		[<%= wc %>],
+      		[<%= wnwc %>],
+      		[<%= nwc %>],
+      		[<%= nnwc %>]
+    
+    	]);
+        var chart = new google.visualization.ImageChart(document.getElementById('count_radar_div'));
+        var options = {	cht: 'r', 
+        				chs: '380x380',
+        				chtt: 'Funde in Richtung',
+        				chts: '000000,12',
+        				chco: '224499,00ff00',
+        				chls: '2,4,0',
+        				chxt: 'x,y',
+        				chxr: '0,0.0,360,0',
+        				chm: 'B,76A4FB50,0,0,1|h,C0C0C0,0,1.0,0.5|h,C0C0C0,0,0.75,0.5|h,C0C0C0,0,0.50,0.5|h,C0C0C0,0,0.25,0.5|o,000099,0,-1,7.0',
+        				chf: 'bg,s,FFFFFF00',
+        				chxl: '0:|N(<%= nc %>)|NNO(<%= nnec %>)|NO(<%= nec %>)|ONO(<%= enec %>)|O(<%= ec %>)|OSO(<%= esec %>)|SO(<%= sec %>)|SSO(<%= ssec %>)|S(<%= sc %>)|SSW(<%= sswc %>)|SW(<%= swc %>)|WSW(<%= wswc %>)|W(<%= wc %>)|WNW(<%= wnwc %>)|NW(<%= nwc %>)|NNW(<%= nnwc %>)|1:||<%= (bbv*0.25).to_i %>|<%= (bbv/2).to_i %>|<%= (bbv*0.75).to_i %>|<%= bbv %>'
+        				};
+        chart.draw(dataTable, options);
+    }
+        
+	function drawDChart () {
+		var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn('number');
+        dataTable.addRows([
+        	[<%= na.mean %>],
+        	[<%= nnea.mean %>],
+        	[<%= nea.mean %>],
+        	[<%= enea.mean %>],
+        	[<%= ea.mean %>],
+        	[<%= esea.mean %>],
+        	[<%= sea.mean %>],
+        	[<%= ssea.mean %>],
+        	[<%= sa.mean %>],
+        	[<%= sswa.mean %>],
+        	[<%= swa.mean %>],
+        	[<%= wswa.mean %>],
+        	[<%= wa.mean %>],
+        	[<%= wnwa.mean %>],
+        	[<%= nwa.mean %>],
+        	[<%= nnwa.mean %>]
+        ]);
+		var chart = new google.visualization.ImageChart(document.getElementById('dist_radar_div'));
+		var options = {	cht: 'r', 
+        				chs: '380x380',
+        				chtt: 'Durchschnittliche Entfernung (km) in Richtung',
+        				chts: '000000,12',
+        				chco: '224499,00ff00',
+        				chls: '2,4,0',
+        				chxt: 'x,y',
+        				chxr: '0,0.0,360,0',
+        				chm: 'B,76A4FB50,0,0,1|h,C0C0C0,0,1.0,0.5|h,C0C0C0,0,0.75,0.5|h,C0C0C0,0,0.50,0.5|h,C0C0C0,0,0.25,0.5|o,000099,0,-1,7.0',
+        				chf: 'bg,s,FFFFFF00',
+        				chxl: '0:|N(<%= na.mean %>)|NNO(<%= nnea.mean %>)|NO(<%= nea.mean %>)|ONO(<%= enea.mean %>)|O(<%= ea.mean %>)|OSO(<%= esea.mean %>)|SO(<%= sea.mean %>)|SSO(<%= ssea.mean %>)|S(<%= sa.mean %>)|SSW(<%= sswa.mean %>)|SW(<%= swa.mean %>)|WSW(<%= wswa.mean %>)|W(<%= wa.mean %>)|WNW(<%= wnwa.mean %>)|NW(<%= nwa.mean %>)|NNW(<%= nnwa.mean %>)|1:||<%= (bdv*0.25).to_i %>|<%= (bdv/2).to_i %>|<%= (bdv*0.75).to_i %>|<%= bdv %>'  
+        				};
+        chart.draw(dataTable, options);
+	}
+</script>
+<div class="row">
+	<div class="col-md-6" id='count_radar_div'></div>
+	<div class="col-md-6" id='dist_radar_div'></div>
+</div>
