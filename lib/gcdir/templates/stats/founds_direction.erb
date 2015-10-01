@@ -98,6 +98,14 @@ end
 
 bbv = [nc, nnec, nec, enec, ec, esec, sec, ssec, sc, sswc, swc, wswc, wc, wnwc, nwc, nnwc].max
 bdv = [na.mean, nnea.mean, nea.mean, enea.mean, ea.mean, esea.mean, sea.mean, ssea.mean, sa.mean, sswa.mean, swa.mean, wswa.mean, wa.mean, wnwa.mean, nwa.mean, nnwa.mean].max
+
+=begin
+	
+&chd=t:94,100,18,18,76,13,13,47,47,62,89,69,29,63,62,5,94
+&chxl=0:|N+%2873%29|NNO+%2883%29|NO+%287%29|ONO+%287%29|O+%2843%29|OSO+%285%29|SO+%285%29|SSO+%2818%29|S+%2818%29|SSW+%2820%29|SW+%2864%29|WSW+%2832%29|W+%2811%29|WNW+%2821%29|NW+%2820%29|NNW+%282%29|1:||10|19|32|83
+&chxs=0,000000,12,1.3,t,ffffff|1,000000,12,1.3,t,ffffff
+	
+=end
 %>
 
 <h4>Funde nach Richtung</h4>
@@ -108,23 +116,23 @@ bdv = [na.mean, nnea.mean, nea.mean, enea.mean, ea.mean, esea.mean, sea.mean, ss
     	var dataTable = new google.visualization.DataTable();
     	dataTable.addColumn('number');
     	dataTable.addRows([
-    		[<%= nc %>],
-      		[<%= nnec %>],
-      		[<%= nec %>],
-      		[<%= enec %>],
-      		[<%= ec %>],
-      		[<%= esec %>],
-      		[<%= sec %>],
-      		[<%= ssec %>],
-      		[<%= sc %>],
-      		[<%= sswc %>],
-      		[<%= swc %>],
-      		[<%= wswc %>],
-      		[<%= wc %>],
-      		[<%= wnwc %>],
-      		[<%= nwc %>],
-      		[<%= nnwc %>]
-    
+    		[<%= Math.log(nc) %>],
+      		[<%= Math.log(nnec) %>],
+      		[<%= Math.log(nec) %>],
+      		[<%= Math.log(enec) %>],
+      		[<%= Math.log(ec) %>],
+      		[<%= Math.log(esec) %>],
+      		[<%= Math.log(sec) %>],
+      		[<%= Math.log(ssec) %>],
+      		[<%= Math.log(sc) %>],
+      		[<%= Math.log(sswc) %>],
+      		[<%= Math.log(swc) %>],
+      		[<%= Math.log(wswc) %>],
+      		[<%= Math.log(wc) %>],
+      		[<%= Math.log(wnwc) %>],
+      		[<%= Math.log(nwc) %>],
+      		[<%= Math.log(nnwc) %>],
+      		[<%= Math.log(nc) %>]
     	]);
         var chart = new google.visualization.ImageChart(document.getElementById('count_radar_div'));
         var options = {	cht: 'r', 
@@ -137,7 +145,8 @@ bdv = [na.mean, nnea.mean, nea.mean, enea.mean, ea.mean, esea.mean, sea.mean, ss
         				chxr: '0,0.0,360,0',
         				chm: 'B,76A4FB50,0,0,1|h,C0C0C0,0,1.0,0.5|h,C0C0C0,0,0.75,0.5|h,C0C0C0,0,0.50,0.5|h,C0C0C0,0,0.25,0.5|o,000099,0,-1,7.0',
         				chf: 'bg,s,FFFFFF00',
-        				chxl: '0:|N(<%= nc %>)|NNO(<%= nnec %>)|NO(<%= nec %>)|ONO(<%= enec %>)|O(<%= ec %>)|OSO(<%= esec %>)|SO(<%= sec %>)|SSO(<%= ssec %>)|S(<%= sc %>)|SSW(<%= sswc %>)|SW(<%= swc %>)|WSW(<%= wswc %>)|W(<%= wc %>)|WNW(<%= wnwc %>)|NW(<%= nwc %>)|NNW(<%= nnwc %>)|1:||<%= (bbv*0.25).to_i %>|<%= (bbv/2).to_i %>|<%= (bbv*0.75).to_i %>|<%= bbv %>'
+        				chxl: '0:|N(<%= nc %>)|NNO(<%= nnec %>)|NO(<%= nec %>)|ONO(<%= enec %>)|O(<%= ec %>)|OSO(<%= esec %>)|SO(<%= sec %>)|SSO(<%= ssec %>)|S(<%= sc %>)|SSW(<%= sswc %>)|SW(<%= swc %>)|WSW(<%= wswc %>)|W(<%= wc %>)|WNW(<%= wnwc %>)|NW(<%= nwc %>)|NNW(<%= nnwc %>)|1:||-|-|-|-',
+        				chxs: '0,000000,12,1.3,t,ffffff|1,000000,12,1.3,t,ffffff'
         				};
         chart.draw(dataTable, options);
     }
@@ -146,22 +155,23 @@ bdv = [na.mean, nnea.mean, nea.mean, enea.mean, ea.mean, esea.mean, sea.mean, ss
 		var dataTable = new google.visualization.DataTable();
         dataTable.addColumn('number');
         dataTable.addRows([
-        	[<%= na.mean %>],
-        	[<%= nnea.mean %>],
-        	[<%= nea.mean %>],
-        	[<%= enea.mean %>],
-        	[<%= ea.mean %>],
-        	[<%= esea.mean %>],
-        	[<%= sea.mean %>],
-        	[<%= ssea.mean %>],
-        	[<%= sa.mean %>],
-        	[<%= sswa.mean %>],
-        	[<%= swa.mean %>],
-        	[<%= wswa.mean %>],
-        	[<%= wa.mean %>],
-        	[<%= wnwa.mean %>],
-        	[<%= nwa.mean %>],
-        	[<%= nnwa.mean %>]
+        	[<%= Math.log(na.mean) %>],
+        	[<%= Math.log(nnea.mean) %>],
+        	[<%= Math.log(nea.mean) %>],
+        	[<%= Math.log(enea.mean) %>],
+        	[<%= Math.log(ea.mean) %>],
+        	[<%= Math.log(esea.mean) %>],
+        	[<%= Math.log(sea.mean) %>],
+        	[<%= Math.log(ssea.mean) %>],
+        	[<%= Math.log(sa.mean) %>],
+        	[<%= Math.log(sswa.mean) %>],
+        	[<%= Math.log(swa.mean) %>],
+        	[<%= Math.log(wswa.mean) %>],
+        	[<%= Math.log(wa.mean) %>],
+        	[<%= Math.log(wnwa.mean) %>],
+        	[<%= Math.log(nwa.mean) %>],
+        	[<%= Math.log(nnwa.mean) %>],
+        	[<%= Math.log(na.mean) %>]
         ]);
 		var chart = new google.visualization.ImageChart(document.getElementById('dist_radar_div'));
 		var options = {	cht: 'r', 
@@ -174,7 +184,8 @@ bdv = [na.mean, nnea.mean, nea.mean, enea.mean, ea.mean, esea.mean, sea.mean, ss
         				chxr: '0,0.0,360,0',
         				chm: 'B,76A4FB50,0,0,1|h,C0C0C0,0,1.0,0.5|h,C0C0C0,0,0.75,0.5|h,C0C0C0,0,0.50,0.5|h,C0C0C0,0,0.25,0.5|o,000099,0,-1,7.0',
         				chf: 'bg,s,FFFFFF00',
-        				chxl: '0:|N(<%= na.mean %>)|NNO(<%= nnea.mean %>)|NO(<%= nea.mean %>)|ONO(<%= enea.mean %>)|O(<%= ea.mean %>)|OSO(<%= esea.mean %>)|SO(<%= sea.mean %>)|SSO(<%= ssea.mean %>)|S(<%= sa.mean %>)|SSW(<%= sswa.mean %>)|SW(<%= swa.mean %>)|WSW(<%= wswa.mean %>)|W(<%= wa.mean %>)|WNW(<%= wnwa.mean %>)|NW(<%= nwa.mean %>)|NNW(<%= nnwa.mean %>)|1:||<%= (bdv*0.25).to_i %>|<%= (bdv/2).to_i %>|<%= (bdv*0.75).to_i %>|<%= bdv %>'  
+        				chxl: '0:|N(<%= na.mean %>)|NNO(<%= nnea.mean %>)|NO(<%= nea.mean %>)|ONO(<%= enea.mean %>)|O(<%= ea.mean %>)|OSO(<%= esea.mean %>)|SO(<%= sea.mean %>)|SSO(<%= ssea.mean %>)|S(<%= sa.mean %>)|SSW(<%= sswa.mean %>)|SW(<%= swa.mean %>)|WSW(<%= wswa.mean %>)|W(<%= wa.mean %>)|WNW(<%= wnwa.mean %>)|NW(<%= nwa.mean %>)|NNW(<%= nnwa.mean %>)|1:||-|-|-|-',
+        				chxs: '0,000000,12,1.3,t,ffffff|1,000000,12,1.3,t,ffffff'
         				};
         chart.draw(dataTable, options);
 	}
