@@ -61,7 +61,7 @@ cg = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (cmaxvalue-cminva
 <% 31.times do |day| %>
 <td 
 <% if matrix[i][day] > 0 %>
-bgcolor = "#<%= g.gradient(matrix[i-1][day]-minvalue).to_s(16) %>"
+bgcolor = "#<%= g.gradient(matrix[i][day]-minvalue).to_s(16) %>"
 <% end %>
 ><%= matrix[i][day] %></td>
 <% end %>
