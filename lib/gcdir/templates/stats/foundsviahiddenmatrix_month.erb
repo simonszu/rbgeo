@@ -76,4 +76,4 @@ bgcolor = "#<%= cg.gradient(gesamtmonthsum[month]-cminvalue).to_s(16) %>"
 <% end %>
 </tr>
 </table>
-<center>Caches, die an  <strong><%= matrix.flatten.select{|item| item > 0}.length %></strong> von <%= matrix.flatten.length %> möglichen Monaten (seit dem ältesten Cache) ausgelegt wurden, gefunden. (<%= percent(matrix.flatten.select{|item| item > 0}.length, matrix.flatten.length) %>%).</center>
+<center>Caches, die an  <strong><%= matrix.flatten.select{|item| item > 0}.length %></strong> von <%= matrix.flatten.length %> möglichen Monaten (seit dem Auslegejahr des ältesten Caches) ausgelegt wurden, gefunden. (<%= percent(matrix.flatten.select{|item| item > 0}.length, matrix.flatten.length) %>%).</center>

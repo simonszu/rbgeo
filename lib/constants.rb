@@ -19,6 +19,8 @@ FINAL_LOGTYPES = ['Found it', 'Attended', 'Archive', 'Webcam Photo Taken']
 
 FOUND_LOGTYPES = ['Found it', 'Attended', 'Webcam Photo Taken']
 
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
+
 MAX_SLEEPTIME = 0
 
 MILESTONE_INTERVAL = 50
