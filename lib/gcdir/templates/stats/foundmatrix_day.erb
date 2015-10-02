@@ -67,7 +67,7 @@ bgcolor = "#<%= g.gradient(matrix[i-1][day]-minvalue).to_s(16) %>"
 <% end %>
 <td
 <% if gesamtmonthsum[i] > 0 %>
-bgcolor = "#<%= rg.gradient(gesamtmonthsum[0]-rminvalue).to_s(16) %>"
+bgcolor = "#<%= rg.gradient(gesamtmonthsum[i]-rminvalue).to_s(16) %>"
 <% end %>
 ><%= gesamtmonthsum[i] %></td>
 </tr>
