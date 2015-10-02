@@ -1,0 +1,41 @@
+<%
+
+firstlogyear = Time.at(Cache.order(:logdate).first.logdate).year
+lastlogyear = Time.at(Cache.order(logdate: :desc).first.logdate).year
+logyears = years_between(firstlogyear, lastlogyear)
+diagarray = Array.new
+
+logyears.each do |year|
+	janval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 1, 1).to_i, Time.new(year.strftime('%Y').to_i, 2, 1).to_i).length
+	febval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 2, 1).to_i, Time.new(year.strftime('%Y').to_i, 3, 1).to_i).length
+	marval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 3, 1).to_i, Time.new(year.strftime('%Y').to_i, 4, 1).to_i).length
+	aprval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 4, 1).to_i, Time.new(year.strftime('%Y').to_i, 5, 1).to_i).length
+	mayval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 5, 1).to_i, Time.new(year.strftime('%Y').to_i, 6, 1).to_i).length
+	junval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 6, 1).to_i, Time.new(year.strftime('%Y').to_i, 7, 1).to_i).length
+	julval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 7, 1).to_i, Time.new(year.strftime('%Y').to_i, 8, 1).to_i).length
+	augval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 8, 1).to_i, Time.new(year.strftime('%Y').to_i, 9, 1).to_i).length
+	sepval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 9, 1).to_i, Time.new(year.strftime('%Y').to_i, 10, 1).to_i).length
+	oktval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 10, 1).to_i, Time.new(year.strftime('%Y').to_i, 11, 1).to_i).length
+	novval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 11, 1).to_i, Time.new(year.strftime('%Y').to_i, 12, 1).to_i).length
+	dezval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 12, 1).to_i, Time.new(year.strftime('%Y').to_i+1, 1, 1).to_i).length
+
+	# Calculate some values for the gradient
+	maxval = [janval, febval, marval, aprval, mayval, junval, julval, augval, sepval, oktval, novval, dezval].max
+	minval = [janval, febval, marval, aprval, mayval, junval, julval, augval, sepval, oktval, novval, dezval].min
+	g = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (maxval-minval))
+
+	diagurl = Gchart.bar( :size => '360x135',
+				:bar_width_and_spacing => "10, 3",
+				:title => "#{year.strftime('%Y')}",
+				:title_size => 10,
+				:data => [janval, febval, marval, aprval, mayval, junval, julval, augval, sepval, oktval, novval, dezval],
+				:custom => "chxt=x&chxl=0:|Jan|Feb|Mar|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez&chco=#{g.gradient(janval).to_s(16)}|#{g.gradient(febval).to_s(16)}|#{g.gradient(marval).to_s(16)}|#{g.gradient(aprval).to_s(16)}|#{g.gradient(mayval).to_s(16)}|#{g.gradient(junval).to_s(16)}|#{g.gradient(julval).to_s(16)}|#{g.gradient(augval).to_s(16)}|#{g.gradient(sepval).to_s(16)}|#{g.gradient(oktval).to_s(16)}|#{g.gradient(novval).to_s(16)}|#{g.gradient(dezval).to_s(16)}"
+				)
+	diagarray.push(diagurl)
+end
+
+%>
+<h4>Funde nach Monaten (Diagramm)</h4>
+<% diagarray.each do |url| %>
+	<img src="<%= url %>">
+<% end %>

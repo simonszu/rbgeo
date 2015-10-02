@@ -45,7 +45,7 @@ cminvalue = gesamtmonthsum.select{|item| item > 0}.min
 cg = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, (cmaxvalue-cminvalue))
 
 %>
-<h4>Funde nach Monat</h4>
+<h4>Funde nach Monaten (Matrix)</h4>
 <table class="table table-bordered table-condensed">
 <tr><td></td><td colspan="12" align="center"><strong>Monat</strong></td><td></td></tr>
 <tr><td><strong>Jahr</strong></td><td><strong>Jan</strong></td><td><strong>Feb</strong></td><td><strong>Mar</strong></td><td><strong>Apr</strong></td><td><strong>Mai</strong></td><td><strong>Jun</strong></td><td><strong>Jul</strong></td><td><strong>Aug</strong></td><td><strong>Sept</strong></td><td><strong>Okt</strong></td><td><strong>Nov</strong></td><td><strong>Dez</strong></td><td><strong>Gesamt</strong></td></tr>

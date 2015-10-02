@@ -53,6 +53,9 @@ def genStats(prefix, user, dir)
 
   print "Founds-Direction-Diagram..."
   founds_direction = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "founds_direction.erb"), 'r').read).result(binding)
+
+  print "Monthly finds as diagram..."
+  monthly_diagram = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "monthly_diagram.erb"), 'r').read).result(binding)
   
   # Read the stats template to generate the statistics page
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read

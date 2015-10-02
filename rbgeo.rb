@@ -12,6 +12,7 @@ require 'fileutils'
 require 'erb'
 require 'active_record'
 require 'geocoder'
+require 'googlecharts'
 
 # Save the starting time for benchmarking
 beginning_time = Time.now
