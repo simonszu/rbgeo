@@ -15,6 +15,7 @@ def genStats(prefix, user, dir)
   footer_partial = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "partials", "footer.erb"), 'r').read).result(binding)
 
   # Read the statistics templates and store their results so we can use them in stats.erb
+
   print "General statistics..."
   general_stats = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "general.erb"), 'r').read).result(binding)
 
@@ -36,9 +37,6 @@ def genStats(prefix, user, dir)
   print "History..."
   history = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "history.erb"), 'r').read).result(binding)
 
-  print "Distances..."
-  distance = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "distance.erb"), 'r').read).result(binding)
-
   print "Founds via Hidden-Matrix (Month)..."
   foundsviahiddenmatrix_month = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "foundsviahiddenmatrix_month.erb"), 'r').read).result(binding)
 
@@ -56,7 +54,10 @@ def genStats(prefix, user, dir)
 
   print "Monthly finds as diagram..."
   monthly_diagram = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "monthly_diagram.erb"), 'r').read).result(binding)
-  
+
+  print "Distances..."
+  distance = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "distance.erb"), 'r').read).result(binding)
+
   # Read the stats template to generate the statistics page
   stats_template = File.open(File.join(File.dirname(__FILE__), "templates", "stats.erb"), 'r').read
   erb = ERB.new(stats_template)
