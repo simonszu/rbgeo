@@ -10,7 +10,7 @@ for i in 0..matrix.length-1
 end
 
 # Fill the matrix and count the hidden dates
-Cache.where('found = ?', 1).each do |cache|
+Gcache.where('found = ?', 1).each do |cache|
 	i = (Time.at(cache.hiddendate).month)-1
 	j = (Time.at(cache.hiddendate).day)-1
 	matrix[i][j] += 1

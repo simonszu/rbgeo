@@ -1,0 +1,8 @@
+<%
+Gcache.where('found = ?', 1).each do |cache|
+	thislat = simplify_coords(cache.coords_lat)
+	thislon = simplify_coords(cache.coords_lon)
+	#p Geocoder.address([thislat,thislon])
+end
+%>
+<h4>Cachefunde nach Ländern</h4>

@@ -22,9 +22,9 @@ def init_db ()
   # Initialize the DB if not already done
   # Table for caches we don't own
   ActiveRecord::Schema.define do
-    unless ActiveRecord::Base.connection.tables.include? 'caches'
+    unless ActiveRecord::Base.connection.tables.include? 'gcaches'
       puts "Initializing database for not owned caches..."
-      create_table :caches do |table|
+      create_table :gcaches do |table|
         table.column :gcid, :string
         table.column :name, :string
         table.column :owner, :string
@@ -53,9 +53,9 @@ def init_db ()
 
   # Table for caches owned
   ActiveRecord::Schema.define do
-    unless ActiveRecord::Base.connection.tables.include? 'ownedcaches'
+    unless ActiveRecord::Base.connection.tables.include? 'gownedcaches'
       puts "Initializing database for owned caches..."
-      create_table :ownedcaches do |table|
+      create_table :gownedcaches do |table|
         table.column :name, :string
         table.column :status, :string
         table.column :guid, :string
@@ -67,10 +67,10 @@ def init_db ()
 end
 
 # Here be models, necessary for using ActiveRecord
-class Cache < ActiveRecord::Base
+class Gcache < ActiveRecord::Base
   self.inheritance_column = :inheritance_type
 end
 
-class Ownedcache < ActiveRecord::Base
+class Gownedcache < ActiveRecord::Base
   self.inheritance_column = :inheritance_type
 end

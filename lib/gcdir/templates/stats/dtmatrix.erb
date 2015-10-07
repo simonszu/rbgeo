@@ -12,15 +12,15 @@ for i in 0..matrix.length-1
 end
 
 # Fill the matrix
-Cache.all.each do |cache|
+Gcache.where('found = ?', 1)each do |cache|
   i = (cache.difficulty*2).to_i
   j = (cache.terrain*2).to_i
   matrix[i-1][j-1] += 1
 end
 
 # Calculate hard caches
-hardcaches = Cache.where("difficulty >= ? OR terrain >= ?", 3, 3).length
-allcaches = Cache.all.length
+hardcaches = Gcache.where("difficulty >= ? OR terrain >= ?", 3, 3).length
+allcaches = Gcache.all.length
 
 # Calculate the sums
 gesamtdifficulty = Array.new

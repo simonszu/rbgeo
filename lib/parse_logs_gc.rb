@@ -7,12 +7,12 @@ def parse_logs_gc()
   gc_user = $config['credentials']['username']
   gc_passwd = $config['credentials']['password']
 
-  puts "Reading your founds from geocaching.com"
+  puts "Lade Funde von geocaching.com"
   # Create a new agent
   a = Mechanize.new {|agent|
     agent.user_agent_alias = 'Mac Safari'}
 
-  puts "Logging in..."
+  puts "Logge ein..."
 
   # Login
   a.get(LOGIN_PAGE) do |login_page|
@@ -22,7 +22,8 @@ def parse_logs_gc()
     end.click_button
   end
 
-  puts "Loading caches which are updated or not in the DB at all..."
+  puts "Lade neue oder geänderte Caches..."
+  puts ""
 
   # List my founds
   a.get(MY_LOG_PAGE).search("table.Table tr").reverse_each do |cachetable|
@@ -66,19 +67,19 @@ def parse_logs_gc()
     guid = $1
 
     # Try to get the identical cache from the database
-    storedcache = Cache.where(:guid => guid).first
+    storedcache = Gcache.where(:guid => guid).first
 
     # If the stored log is already a final one, preserve it and update only the other attributes
-    is_final_log = (!Cache.where(:guid => guid).empty?) && (FINAL_LOGTYPES.include? storedcache.logtype)
+    is_final_log = (!Gcache.where(:guid => guid).empty?) && (FINAL_LOGTYPES.include? storedcache.logtype)
 
     # If the cache isn't already in the DB or if the details have changed...
     # But check if the previous log was already final if the log-attributes should have changed
-    if (Cache.where(:guid => guid).empty? || (storedcache.name != name) || (((storedcache.logtype != logtype) || (storedcache.logdate != logdate)) && !is_final_log) || (storedcache.status != status) ||  (storedcache.favorite != favorite) || (storedcache.area != area))
+    if (Gcache.where(:guid => guid).empty? || (storedcache.name != name) || (((storedcache.logtype != logtype) || (storedcache.logdate != logdate)) && !is_final_log) || (storedcache.status != status) ||  (storedcache.favorite != favorite) || (storedcache.area != area))
       # Get detailed details
       begin
 
         # If there are multiple logs present, store only the latest one.
-        if (!Cache.where(:guid => guid).empty? && (storedcache.logdate.to_i > logdate))
+        if (!Gcache.where(:guid => guid).empty? && (storedcache.logdate.to_i > logdate))
           next
         end
 
@@ -94,7 +95,8 @@ def parse_logs_gc()
           next
         end
 
-        print "New or updated cache \"#{name}\": loading details..."
+        print "Bearbeite \"#{name}\":\n"
+        print "  Lade Details...\n"
 
         # The Difficulty
         detailpage.search("span[id = 'ctl00_ContentBody_uxLegendScale'] img")[0]["alt"].match(/(.{1,3}) out of 5/)
@@ -137,11 +139,10 @@ def parse_logs_gc()
       sleep (0..MAX_SLEEPTIME).to_a.sample
 
       # Get the log
-      print "loading log"
+      print "  Lade Log...\n"
       logpage = ""
       # Sometimes the logpage doesn't load properly. Repeat trying to load it, until there is no error
       loop do
-        print "..."
         logpage = a.get(cachetable.css("a")[2]["href"])
         break if !logpage.title.eql? "An Error Has Occurred"
       end
@@ -149,9 +150,9 @@ def parse_logs_gc()
       sleep (0..MAX_SLEEPTIME).to_a.sample
 
       # Store every value into the database
-      print "storing into the database..."
+      print "  Speichere in Datenbank..."
 
-      cache = Cache.where(:guid => guid).first_or_create
+      cache = Gcache.where(:guid => guid).first_or_create
       # Update log attributes only if the log isn't final
       if (!is_final_log)
         cache.logtype = logtype
@@ -191,7 +192,9 @@ def parse_logs_gc()
       cache.favorite = favorite
       cache.save
 
-      print "OK\n"
+      thislat = simplify_coords(coords_lat)
+      thislon = simplify_coords(coords_lon)
+      print "OK\n\n"
     end
   end
 end

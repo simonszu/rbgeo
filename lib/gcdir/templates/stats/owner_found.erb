@@ -2,7 +2,7 @@
 # Stores cachetypes and counts in a hash
 lastindex = 0
 cachehash = Hash.new
-Cache.select(:owner).distinct.each do |cache|
+Gcache.select(:owner).distinct.each do |cache|
 	cachehash[cache.owner] = Cache.where(owner: cache.owner, found: "1").length
 end
 

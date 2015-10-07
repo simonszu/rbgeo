@@ -3,7 +3,7 @@
   distances = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   distlabels = ["0-10 km", "11-20 km", "21-30 km", "31-40 km", "41-50 km", "51-100 km", "101-200 km", "201-500 km", "501-1000 km", ">1000 km"]
   home_coords = [simplify_coords(home_lat), simplify_coords(home_lon)]
-  Cache.where(found: "1").each do |cache|
+  Gcache.where(found: "1").each do |cache|
     cache_coords = [simplify_coords(cache.coords_lat), simplify_coords(cache.coords_lon)]
     distance = (coord_distance(home_coords, cache_coords)/1000).round(0)
     case distance

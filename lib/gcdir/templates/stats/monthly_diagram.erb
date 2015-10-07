@@ -1,23 +1,23 @@
 <%
 
-firstlogyear = Time.at(Cache.order(:logdate).first.logdate).year
-lastlogyear = Time.at(Cache.order(logdate: :desc).first.logdate).year
+firstlogyear = Time.at(Gcache.order(:logdate).first.logdate).year
+lastlogyear = Time.at(Gcache.order(logdate: :desc).first.logdate).year
 logyears = years_between(firstlogyear, lastlogyear)
 diagarray = Array.new
 
 logyears.each do |year|
-	janval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 1, 1).to_i, Time.new(year.strftime('%Y').to_i, 2, 1).to_i).length
-	febval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 2, 1).to_i, Time.new(year.strftime('%Y').to_i, 3, 1).to_i).length
-	marval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 3, 1).to_i, Time.new(year.strftime('%Y').to_i, 4, 1).to_i).length
-	aprval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 4, 1).to_i, Time.new(year.strftime('%Y').to_i, 5, 1).to_i).length
-	mayval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 5, 1).to_i, Time.new(year.strftime('%Y').to_i, 6, 1).to_i).length
-	junval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 6, 1).to_i, Time.new(year.strftime('%Y').to_i, 7, 1).to_i).length
-	julval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 7, 1).to_i, Time.new(year.strftime('%Y').to_i, 8, 1).to_i).length
-	augval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 8, 1).to_i, Time.new(year.strftime('%Y').to_i, 9, 1).to_i).length
-	sepval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 9, 1).to_i, Time.new(year.strftime('%Y').to_i, 10, 1).to_i).length
-	oktval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 10, 1).to_i, Time.new(year.strftime('%Y').to_i, 11, 1).to_i).length
-	novval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 11, 1).to_i, Time.new(year.strftime('%Y').to_i, 12, 1).to_i).length
-	dezval = Cache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 12, 1).to_i, Time.new(year.strftime('%Y').to_i+1, 1, 1).to_i).length
+	janval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 1, 1).to_i, Time.new(year.strftime('%Y').to_i, 2, 1).to_i).length
+	febval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 2, 1).to_i, Time.new(year.strftime('%Y').to_i, 3, 1).to_i).length
+	marval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 3, 1).to_i, Time.new(year.strftime('%Y').to_i, 4, 1).to_i).length
+	aprval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 4, 1).to_i, Time.new(year.strftime('%Y').to_i, 5, 1).to_i).length
+	mayval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 5, 1).to_i, Time.new(year.strftime('%Y').to_i, 6, 1).to_i).length
+	junval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 6, 1).to_i, Time.new(year.strftime('%Y').to_i, 7, 1).to_i).length
+	julval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 7, 1).to_i, Time.new(year.strftime('%Y').to_i, 8, 1).to_i).length
+	augval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 8, 1).to_i, Time.new(year.strftime('%Y').to_i, 9, 1).to_i).length
+	sepval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 9, 1).to_i, Time.new(year.strftime('%Y').to_i, 10, 1).to_i).length
+	oktval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 10, 1).to_i, Time.new(year.strftime('%Y').to_i, 11, 1).to_i).length
+	novval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 11, 1).to_i, Time.new(year.strftime('%Y').to_i, 12, 1).to_i).length
+	dezval = Gcache.where("logdate >= ? AND logdate < ?", Time.new(year.strftime('%Y').to_i, 12, 1).to_i, Time.new(year.strftime('%Y').to_i+1, 1, 1).to_i).length
 
 	# Calculate some values for the gradient
 	maxval = [janval, febval, marval, aprval, mayval, junval, julval, augval, sepval, oktval, novval, dezval].max

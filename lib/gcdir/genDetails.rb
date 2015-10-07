@@ -16,7 +16,7 @@ def genDetails(prefix, user, dir)
   details_template = File.open(File.join(File.dirname(__FILE__), "templates", "details.erb"), 'r').read
 
   # Cycle through all caches and generate and save the actual page for each one
-  Cache.all.each do |cache|
+  Gcache.all.each do |cache|
     erb = ERB.new(details_template)
     File.open(File.join(path, "details", "#{cache.gcid}.html"), "w") { |file|
     file.write(erb.result(binding))}

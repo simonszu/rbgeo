@@ -2,8 +2,8 @@
 # Stores cachetypes and counts in a hash
 lastindex = 0
 cachehash = Hash.new
-Cache.select(:type).distinct.each do |cache|
-	cachehash[cache.type] = Cache.where(type: cache.type, found: "1").length
+Gcache.select(:type).distinct.each do |cache|
+	cachehash[cache.type] = Gcache.where(type: cache.type, found: "1").length
 end
 
 # Sorts the hash descending by counts

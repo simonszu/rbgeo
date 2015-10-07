@@ -55,6 +55,9 @@ def genStats(prefix, user, dir)
   print "Monthly finds as diagram..."
   monthly_diagram = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "monthly_diagram.erb"), 'r').read).result(binding)
 
+  print "Founds via Country..."
+  founds_country = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "founds_country.erb"), 'r').read).result(binding)
+
   print "Distances..."
   distance = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "distance.erb"), 'r').read).result(binding)
 

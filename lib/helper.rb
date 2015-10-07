@@ -23,7 +23,7 @@ end
 
 # Check if there are logs written on an individual day
 def has_logs(day)
-  if Cache.where("logdate = ? AND (logtype = ? OR logtype = ? OR logtype = ?)", day.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length > 0
+  if Gcache.where("logdate = ? AND (logtype = ? OR logtype = ? OR logtype = ?)", day.to_time.to_i, "Found it", "Attended", "Webcam Photo Taken").length > 0
     return true
   else
     return false
@@ -150,24 +150,24 @@ end
 
 # Returns actual number and percent of a cache type
 def typestats(type)
-  allcachecount = Cache.where(found: "1").length
-  thiscount = Cache.where(type: type).length
+  allcachecount = Gcache.where(found: "1").length
+  thiscount = Gcache.where(type: type).length
   thispercent = percent(thiscount, allcachecount)
   return [thiscount, thispercent]
 end
 
 # Returns actual number and percent of a cache container size
 def sizestats(size)
-  allcachecount = Cache.where(found: "1").length
-  thiscount = Cache.where(size: size).length
+  allcachecount = Gcache.where(found: "1").length
+  thiscount = Gcache.where(size: size).length
   thispercent = percent(thiscount, allcachecount)
   return [thiscount, thispercent]
 end
 
 # Returns actual number and percent of a cache container size
 def ownerstats(owner)
-  allcachecount = Cache.where(found: "1").length
-  thiscount = Cache.where(owner: owner).length
+  allcachecount = Gcache.where(found: "1").length
+  thiscount = Gcache.where(owner: owner).length
   thispercent = percent(thiscount, allcachecount)
   return [thiscount, thispercent]
 end

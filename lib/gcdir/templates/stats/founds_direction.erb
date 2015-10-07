@@ -40,7 +40,7 @@ nwa = Array.new
 nnwc = 0
 nnwa = Array.new
 
-Cache.all.each do |cache|
+Gcache.where('found = ?', 1).each do |cache|
 	thislat = simplify_coords(cache.coords_lat)
 	thislon = simplify_coords(cache.coords_lon)
 	direction = Geocoder::Calculations.compass_point(Geocoder::Calculations.bearing_between([home_lat_coord, home_lon_coord], [thislat, thislon]), mydirections)
