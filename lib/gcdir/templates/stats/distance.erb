@@ -31,7 +31,7 @@
   end
 
 # Calculate some values for the gradients
-g = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, Cache.all.length)
+g = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, Gcache.all.length)
 %>
 <table class="table table-condensed">
   <tr>
@@ -45,7 +45,7 @@ g = Gradient.new(GRADIENT_FIRST_COLOR, GRADIENT_SECOND_COLOR, Cache.all.length)
     <% if distance > 0 %>
     bgcolor = "#<%= g.gradient(distance).to_s(16) %>"
     <% end %>
-    ><%= distance %> (<%= percent(distance, Cache.where(found: "1").length) %>%)</td>
+    ><%= distance %> (<%= percent(distance, Gcache.where(found: "1").length) %>%)</td>
   </tr>
   <% end %>
 </table>

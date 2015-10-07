@@ -1,6 +1,6 @@
 <%
 cachedays = Gcache.select(:logdate).distinct.length
-dateoffirstcache = Time.at(Cache.first.logdate).to_date
+dateoffirstcache = Time.at(Gcache.first.logdate).to_date
 alldays = (Date.parse(Time.now.strftime('%Y/%m/%d')) - dateoffirstcache).to_i
 cachedays_percent = percent(cachedays, alldays)
 foundcount = Gcache.where("found = 1").length
@@ -108,7 +108,7 @@ maxweekstring = Time.at(maxweek[1]).strftime('%d.%m.%Y')+"-"+Time.at(maxweek[0])
 months_between(Date.new(dateoffirstcache.year, dateoffirstcache.month), Date.new(Time.now.to_date.year, Time.now.to_date.month)).each do |month|
   startday = month
   endday = month.next_month.prev_day
-  foundsinthismonth = Cache.where("logdate <= ? AND logdate >= ?  AND found = ?", endday.to_time.to_i, startday.to_time.to_i, 1).length
+  foundsinthismonth = Gcache.where("logdate <= ? AND logdate >= ?  AND found = ?", endday.to_time.to_i, startday.to_time.to_i, 1).length
   if foundsinthismonth > mostfoundpermonth
     mostfoundpermonth = foundsinthismonth
     maxmonth = month

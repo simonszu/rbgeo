@@ -12,7 +12,7 @@ for i in 0..matrix.length-1
 end
 
 # Fill the matrix
-Gcache.where('found = ?', 1)each do |cache|
+Gcache.where('found = ?', 1).each do |cache|
   i = (cache.difficulty*2).to_i
   j = (cache.terrain*2).to_i
   matrix[i-1][j-1] += 1
