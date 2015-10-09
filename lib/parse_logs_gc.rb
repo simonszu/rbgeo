@@ -61,6 +61,17 @@ def parse_logs_gc()
     # Get the are of the cache
     nbsp = Nokogiri::HTML("&nbsp;").text
     area = cachetable.css("td")[4].inner_text.gsub(nbsp, "").strip
+    # Read country and regional areas, e.g. Bundeslaender
+    area.match(/([^,]+)(, )?(.*)/)
+    # Store values for country and region, depending if there is a region defined
+    if (!$3.eql? "")
+      country = $1
+      region = $3
+    else
+      country = $3
+      region = $1
+    end
+
 
     # Get the GUID of the cache
     cachetable.css("a")[0]["href"].match(/http:\/\/www\.geocaching\.com\/seek\/cache_details\.aspx\?guid=(.+)/)
@@ -74,7 +85,7 @@ def parse_logs_gc()
 
     # If the cache isn't already in the DB or if the details have changed...
     # But check if the previous log was already final if the log-attributes should have changed
-    if (Gcache.where(:guid => guid).empty? || (storedcache.name != name) || (((storedcache.logtype != logtype) || (storedcache.logdate != logdate)) && !is_final_log) || (storedcache.status != status) ||  (storedcache.favorite != favorite) || (storedcache.area != area))
+    if (Gcache.where(:guid => guid).empty? || (storedcache.name != name) || (((storedcache.logtype != logtype) || (storedcache.logdate != logdate)) && !is_final_log) || (storedcache.status != status) ||  (storedcache.favorite != favorite) || (storedcache.country != country) || (storedcache.region != region))
       # Get detailed details
       begin
 
@@ -188,12 +199,10 @@ def parse_logs_gc()
       cache.coords_lon = coords_lon
       cache.favcount = favcount
       cache.type = type
-      cache.area = area
+      cache.region = region
+      cache.country = country
       cache.favorite = favorite
       cache.save
-
-      thislat = simplify_coords(coords_lat)
-      thislon = simplify_coords(coords_lon)
       print "OK\n\n"
     end
   end

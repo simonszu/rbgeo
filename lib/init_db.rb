@@ -5,13 +5,13 @@ def init_db ()
   # Connect to DB
   begin
     # If there is no database file, create it
-    if !File.file?(GC_CACHEDB)
-      SQLite3::Database.new GC_CACHEDB
+    if !File.file?(CACHEDB)
+      SQLite3::Database.new CACHEDB
     end
     # Let ActiveRecord connect to the db
     ActiveRecord::Base.establish_connection(
       :adapter => 'sqlite3',
-      :database => GC_CACHEDB)
+      :database => CACHEDB)
   rescue SQLite3::Exception => e
     puts "Fehler beim Zugriff oder Anlegen der Datenbank."
     puts e
@@ -35,7 +35,8 @@ def init_db ()
         table.column :terrain, :double
         table.column :coords_lat, :string
         table.column :coords_lon, :string
-        table.column :area, :string
+        table.column :country, :string
+        table.column :region, :string
         table.column :hiddendate, :integer
         table.column :status, :string
         table.column :favcount, :integer

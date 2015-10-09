@@ -1,7 +1,7 @@
 # Defines some constants
 
 CONFIG_FILE = 'config.yaml'
-GC_CACHEDB = 'gc-caches.db'
+CACHEDB = 'caches.db'
 
 LOGIN_PAGE = 'https://www.geocaching.com/login/'
 MY_LOG_PAGE = 'http://www.geocaching.com/my/logs.aspx'
