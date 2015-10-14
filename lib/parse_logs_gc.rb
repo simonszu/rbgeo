@@ -63,11 +63,16 @@ def parse_logs_gc()
     area = cachetable.css("td")[4].inner_text.gsub(nbsp, "").strip
     # Read country and regional areas, e.g. Bundeslaender
     area.match(/([^,]+)(, )?(.*)/)
+    #puts "$1: #{$1}"
+    #puts "$3: #{$3}"
     # Store values for country and region, depending if there is a region defined
-    if (!$3.eql? "")
+    # Else region is in $1, and the content in $3 is the country
+    # Or $3 contains nothing, and then the content in $1 is the country 
+
+    if ($3.empty?) #Like in Denmark
       country = $1
       region = $3
-    else
+    else # Like in Germany
       country = $3
       region = $1
     end
