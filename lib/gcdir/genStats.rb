@@ -61,6 +61,9 @@ def genStats(prefix, user, dir)
   print "Founds via Region..."
   founds_region = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "founds_region.erb"), 'r').read).result(binding)
 
+  print "Favorites..."
+  favlist = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "favlist.erb"), 'r').read).result(binding)
+
   print "Distances..."
   distance = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "distance.erb"), 'r').read).result(binding)
 

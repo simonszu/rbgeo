@@ -1,0 +1,16 @@
+<%
+favcaches = Gcache.where('found = ? AND favorite = ?', 1, 1)
+%>
+<h4>Favoriten</h4>
+<table class="table table-condensed">
+<tr>
+<th>Name</th>
+<th>Fav-Punkte zum Zeitpunkt des Fundes</th>
+</tr>
+<% favcaches.each do |cache| %>
+<tr>
+<td><a href="details/<%= cache.gcid %>.html"><%= cache.name %></a></td>
+<td><%= cache.favcount %></td>
+</tr>
+<% end %>
+</table>
