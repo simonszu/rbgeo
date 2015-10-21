@@ -162,7 +162,7 @@ def parse_logs_gc()
         logpage = a.get(cachetable.css("a")[2]["href"])
         break if !logpage.title.eql? "An Error Has Occurred"
       end
-      log = logpage.search("span[id = 'ctl00_ContentBody_LogBookPanel1_LogText']")[0].inner_text.strip
+      log = logpage.search("span[id = 'ctl00_ContentBody_LogBookPanel1_LogText']")[0]
       sleep (0..MAX_SLEEPTIME).to_a.sample
 
       # Store every value into the database
