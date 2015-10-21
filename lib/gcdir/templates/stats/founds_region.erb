@@ -1,0 +1,19 @@
+<%
+regions = Gcache.where('found = ? AND country = ? ', 1, "Germany").select(:region).distinct
+cachesInDeutschland = Gcache.where('found = ? AND country = ? ', 1, "Germany")
+%>
+<h4>Cachefunde Deutschland:
+<%= cachesInDeutschland.length %> Funde in <%= regions.length %> Bundesländern</h4>
+<table class="table table-condensed">
+<tr>
+<th>Bundesland</th>
+<th>Anzahl</th>
+<tr>
+<% regions.each do |_region| %>
+<tr>
+<td><%= _region.region %></td>
+<td><%= Gcache.where('found = ? AND country = ? AND region = ?', 1, "Germany", _region.region).length %>
+(<%= percent(Gcache.where('found = ? AND country = ? AND region = ?', 1, "Germany", _region.region).length, cachesInDeutschland = Gcache.where('found = ? AND country = ? ', 1, "Germany").length) %>%)</td>
+</tr>
+<% end %>
+</table>

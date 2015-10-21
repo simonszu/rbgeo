@@ -1,8 +1,19 @@
 <%
-laender = Gcache.where('found = ?', 1).select(:country).distinct
-p laender
+countries = Gcache.where('found = ?', 1).select(:country).distinct
+allCaches = Gcache.where('found = ?', 1)
 %>
 <h4>Cachefunde nach Ländern</h4>
-<% laender.each do |landrecord| %>
-	<% puts landrecord.country %>
+<table class="table table-condensed">
+<tr>
+<th>Land</th>
+<th>Anzahl</th>
+</tr>
+<% countries.each do |cache| %>
+<tr>
+<td><%= cache.country %></td>
+<td><%= Gcache.where('found = ? AND country = ?', 1, cache.country).length %>
+(<%= percent(Gcache.where('found = ? AND country = ?', 1, cache.country).length, allCaches.length) %>%)
+</td>
+</tr>
 <% end %>
+</table>
