@@ -16,55 +16,58 @@ def genStats(prefix, user, dir)
 
   # Read the statistics templates and store their results so we can use them in stats.erb
 
-  print "General statistics..."
+  puts "  General statistics..."
   general_stats = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "general.erb"), 'r').read).result(binding)
 
-  print "Milestones..."
+  puts "  Milestones..."
   milestones = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "milestones.erb"), 'r').read).result(binding)
 
-  print "D/T Matrix..."
+  puts "  D/T Matrix..."
   dtmatrix = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "dtmatrix.erb"), 'r').read).result(binding)
 
-  print "Found containers..."
+  puts "  Found containers..."
   sizes_found = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "sizes_found.erb"), 'r').read).result(binding)
 
-  print "Found types..."
+  puts "  Found types..."
   types_found = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "types_found.erb"), 'r').read).result(binding)
 
-  print "Owner of founds..."
+  puts "  Owner of founds..."
   owner_found = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "owner_found.erb"), 'r').read).result(binding)
 
-  print "History..."
+  puts "  History..."
   history = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "history.erb"), 'r').read).result(binding)
 
-  print "Founds via Hidden-Matrix (Month)..."
+  puts "  Founds via Hidden-Matrix (Month)..."
   foundsviahiddenmatrix_month = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "foundsviahiddenmatrix_month.erb"), 'r').read).result(binding)
 
-  print "Founds via Hidden-Matrix (Day)..."
+  puts "  Founds via Hidden-Matrix (Day)..."
   foundsviahiddenmatrix_day = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "foundsviahiddenmatrix_day.erb"), 'r').read).result(binding)
 
-  print "Found-Matrix (Month)..."
+  puts "  Found-Matrix (Month)..."
   foundmatrix_month = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "foundmatrix_month.erb"), 'r').read).result(binding)
 
-  print "Found-Matrix (Day)..."
+  puts "  Found-Matrix (Day)..."
   foundmatrix_day = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "foundmatrix_day.erb"), 'r').read).result(binding)
 
-  print "Founds-Direction-Diagram..."
+  puts "  Founds-Direction-Diagram..."
   founds_direction = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "founds_direction.erb"), 'r').read).result(binding)
 
-  print "Monthly finds as diagram..."
+  puts "  Monthly finds as diagram..."
   monthly_diagram = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "monthly_diagram.erb"), 'r').read).result(binding)
 
-  print "Founds via Country..."
+  puts "  Founds via Country..."
   founds_country = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "founds_country.erb"), 'r').read).result(binding)
 
-  print "Founds via Region..."
+  puts "  Founds via Region..."
   founds_region = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "founds_region.erb"), 'r').read).result(binding)
+ 
+  puts "  Founds-Map..."
+  founds_map = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "founds_map.erb"), 'r').read).result(binding)
 
-  print "Favorites..."
+  puts "  Favorites..."
   favlist = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "favlist.erb"), 'r').read).result(binding)
 
-  print "Distances..."
+  puts "  Distances..."
   distance = ERB.new(File.open(File.join(File.dirname(__FILE__), "templates", "stats", "distance.erb"), 'r').read).result(binding)
 
   # Read the stats template to generate the statistics page
@@ -74,5 +77,5 @@ def genStats(prefix, user, dir)
   File.open(File.join(path, "stats.html"), "w") { |file|
     file.write(erb.result(binding))}
 
-  print "OK\n"
+  puts "OK"
 end
