@@ -6,13 +6,14 @@ Ein Statistikgenerator für Geocacher, ähnlich dem mittlerweile mehr oder wenig
 Nutzung
 -------
 1. Installiere dir Ruby. Wie das bei deinem Betriebssystem geht, bleibt dir (noch) selbst überlassen. Du benötigst mindestens Ruby 2.1.5.
-2. Installiere dir die Gems `mechanize`, `sqlite3`, `geocoder`, `googlecharts` und `activerecord`. Dies geht z.B. mit `gem install mechanize sqlite3 activerecord geocoder googlecharts` oder unter Debian-basierten Betriebssystemen mit `apt-get install ruby-mechanize ruby-sqlite3 ruby-activerecord`, geocoder und googlecharts können nur über `gem` installiert werden.
+2. Installiere dir das Gem `bundler`: `gem install bundler` 
 3. Klone dieses Repository. `git clone https://github.com/simonszu/rbgeo`. Windowsnutzer nutzen hierfür bitte die [Github for Windows](http://windows.github.com/) Applikation.
 4. Benenne die `config.yaml.example` in `config.yaml` um. Fülle die Werte aus.
   - `username`: Dein Username auf geocaching.com
   - `password`: Dein Passwort auf geocaching.com
   - `path`: Der Pfad, wo die generierten Statistikseiten gespeichert werden sollen
-5. Führe das Script aus: `ruby rbgeo.rb`. Der ausführende User muss Schreibrechte im rbgeo-Verzeichnis, sowie im `path` haben.
+5. Installiere alle Abhängigkeiten automatisch: `bundle install`
+6. Führe das Script aus: `ruby rbgeo.rb`. Der ausführende User muss Schreibrechte im rbgeo-Verzeichnis, sowie im `path` haben.
 
 Mitmachen
 ---------

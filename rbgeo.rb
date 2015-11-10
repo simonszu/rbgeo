@@ -1,18 +1,10 @@
 #! /usr/bin/env ruby
 # coding: utf-8
 
-$stdout.sync = true
+require 'bundler'
+Bundler.require
 
-require 'mechanize'
-require 'nokogiri'
-require 'yaml'
-require 'open-uri'
-require 'sqlite3'
-require 'fileutils'
-require 'erb'
-require 'active_record'
-require 'geocoder'
-require 'googlecharts'
+$stdout.sync = true
 
 # Save the starting time for benchmarking
 beginning_time = Time.now
