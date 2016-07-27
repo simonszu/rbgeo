@@ -6,6 +6,7 @@ Ein Statistikgenerator für Geocacher, ähnlich dem mittlerweile mehr oder wenig
 Nutzung
 -------
 1. Installiere dir Ruby. Wie das bei deinem Betriebssystem geht, bleibt dir (noch) selbst überlassen. Du benötigst mindestens Ruby 2.1.5.
+2. Du benötigst die Development-Header für `sqlite3`, z.B. `apt-get install libsqlite3-dev`
 2. Installiere dir das Gem `bundler`: `gem install bundler` 
 3. Klone dieses Repository. `git clone https://github.com/simonszu/rbgeo`. Windowsnutzer nutzen hierfür bitte die [Github for Windows](http://windows.github.com/) Applikation.
 4. Benenne die `config.yaml.example` in `config.yaml` um. Fülle die Werte aus.
